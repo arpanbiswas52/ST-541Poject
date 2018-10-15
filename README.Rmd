@@ -2,14 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 # An approach to the efficient constraint validation and reduction of Simulation Cost of Large Scale Complex River System.
 
 Author: "Arpan Biswas"
