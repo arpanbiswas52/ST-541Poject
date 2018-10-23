@@ -2,7 +2,7 @@ To Create a Milestone for project
 
 $Week 5: Due 10/25/2018$
 
-Research study on the optimization part of the project and answer the following questions:
+Research study on the optimization algorithm in R of the project and answer the following questions:
 
 Can we use any nonlinear constraint algorithm to build the optimization model?
 
