@@ -11,7 +11,6 @@ If not, can we use some other technique/workaround to show the optimization resu
 If not, need to review the scope of the project and find some other ways to answer the primary research objectives proposed in the project.
 
 Update: 
-
 We could find some Non-linear constraints algorithm package in R suitable for our project. We will use package "nloptr" for solving non-linear constrained optimization problem. 
 Specifically we will use Sequential Quadratic Programming algorithm "slsqp" which solve nonlinearly constrained, gradient-based optimization, supporting both equality and inequality constraints. This classical method is known to be one of the powerful optimization algorithm due to fast convergence and therefore is the best approach in this project as one of our primary research objective is reducing the computational effort. 
 
