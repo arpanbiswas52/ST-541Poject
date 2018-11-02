@@ -1,1 +1,23 @@
 
+
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = "hide")
+library(tidyverse)
+library(here)
+```
+
+
+```{r}
+
+#Loading the input data of Inflows to Grand Coulee, Lower Granite Reservoirs and Price data.
+# The input data has uncertainities.
+#The input data are the realizations of Inflows, Price for 14 days.
+
+library(readr)
+GCLInflowsdata <- read_csv("DATA/GCLInflowsdata.csv")
+LWGInflowsdata <- read_csv("DATA/LWGInflowsdata.csv")
+Pricedata <- read_csv("DATA/Pricedata.csv")
+GCLInflowsdata
+LWGInflowsdata
+Pricedata
+```
