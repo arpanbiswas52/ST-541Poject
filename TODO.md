@@ -18,8 +18,17 @@ $Week 6: Due 11/01/2018$
 
 Based on what we decide on week 5, start coding. 
 
-Create the data file with all the data required. 
+<Update> Status: In Progress
 
+Create the data file with all the data required. 
+<Update> Status: Complete
+All the input data required for this project has been stored in the DATA folder.
+
+In our project, we have 3 input data for Inflows of GCL, inflows of LWG and Price.
+
+The input data has uncertainities.
+
+The input data are the realizations of Inflows, Price for 14 days where each column represents a realization and each row represent day.
 
 
 Create all the required folders in the project to store appropiate function .rmd files. 
