@@ -20,7 +20,18 @@ Based on what we decide on week 5, start coding.
 
 Create the data file with all the data required. 
 
+
+
 Create all the required folders in the project to store appropiate function .rmd files. 
+
+<Update> : Created folders "data", "results", "simulations", "constraints", "objective function"
+Folder 'data' will contain all the input data that will be required in the project like Price data, Inflows data. 
+Folder 'results' will contain all the results found in this project
+Folder'simulations' will contain all the functions written in .rmd to run the simulations. This will be the most significant for our project.
+Folder 'constraints' will contain .rmd files where all the constraints for our problem will be written.
+Folder 'objective function' will contain .rmd files where the objective function for our problem will be written.
+
+
 
 $Week 7: Due 11/08/2018$
 
