@@ -24,7 +24,7 @@ Create the data file with all the data required.
 
 Create all the required folders in the project to store appropiate function .rmd files. 
 
-<Update> :
+<Update> Status: Complete
 Created folders "data", "results", "simulations", "constraints", "objective function"
 Folder 'data' will contain all the input data that will be required in the project like Price data, Inflows data. 
 Folder 'results' will contain all the results found in this project
