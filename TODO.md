@@ -47,6 +47,7 @@ $Week 7: Due 11/08/2018$
 
 To start the integral part of coding. Writing several functions as required.
 
+
 $Week 8: Due 11/15/2018$
 
 Continue coding. 

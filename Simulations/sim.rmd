@@ -1,1 +1,54 @@
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = "hide")
+library(tidyverse)
+library(here)
+```
+
+**Simulations for Quantifying Storage**
+```{r}
+#Setting initial conditions
+t <- 14 # number of daily timesteps for 14 days
+r <- 3 # number of reservoirs = 3 
+Current_Inflows <- c(81.45, 11.04, 131.27) 
+Current_Outflows <- c(55.72, 13.54, 127.03)
+Current_Storage <- c(2260, 47.8, 79.1)
+Outflows_lb <- c(1.13, 8.2, 7)
+Outflows_ub <- c(294.04, 150, 214.2) 
+
+#Will add more
+```
+
+```{r}
+#Generating random outflows between upper and lower bound. This part is temporary as when we code the optimization part, this data will be generated from the optimization algorithm.
+
+#Assuming uniform distribution
+sample_matrix <- runif(n = r*t) %>% matrix(ncol = t)
+lb <- rep(Outflows_lb, t) %>% matrix(nrow=r)
+ub <- rep(Outflows_ub, t) %>% matrix(nrow=r)
+Outflows <- lb + sample_matrix*ub
+Outflows
+```
+
+```{r}
+
+# Sampling Inflows data realizations 
+
+GCLInflowsdata_Mean <- rowMeans(GCLInflowsdata[,2:28])
+LWGInflowsdata_Mean <- rowMeans(LWGInflowsdata[,2:28])
+#GCLInflowsdata_Mean
+#LWGInflowsdata_Mean
+ntimes <- 1000
+
+GCLInflowsdata_samples <- sample(GCLInflowsdata_Mean, length(GCLInflowsdata_Mean)*ntimes,  replace = TRUE) %>% matrix(nrow = ntimes)
+
+LWGInflowsdata_samples <- sample(LWGInflowsdata_Mean, length(LWGInflowsdata_Mean)*ntimes,  replace = TRUE) %>% matrix(nrow = ntimes)
+```
+
+```{r}
+# Quantifying storage
+
+```
+
+
+
 
