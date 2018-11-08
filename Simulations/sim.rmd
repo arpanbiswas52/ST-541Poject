@@ -2,6 +2,7 @@
 knitr::opts_chunk$set(echo = TRUE, results = "hide")
 library(tidyverse)
 library(here)
+library(debugr)
 ```
 
 **Simulations for Quantifying Storage**
@@ -47,8 +48,44 @@ LWGInflowsdata_samples <- sample(LWGInflowsdata_Mean, length(LWGInflowsdata_Mean
 ```{r}
 # Quantifying storage
 
+Storage_realizations <- function(Inflow1, Inflow2, Storage_initial, Inflow_initial, Outflow_initial, Outflows, delta_t, n ){
+  GCLInflowsdata_samples <- Inflow1
+  LWGInflowsdata_samples <- Inflow2
+  V_in <- Storage_initial
+  I_in <- Inflow_initial
+  Q_in <- Outflow_initial
+  Q_GCL <- Outflows[1, ]
+  Q_LWG <- Outflows[2, ]
+  Q_MCN <- Outflows[3, ]
+  MCNInflows <- Outflows[1, ] + Outflows[2, ]
+  Storage_realizations_GCL <- matrix(0L, nrow =n, ncol = t)
+  Storage_realizations_LWG <- matrix(0L, nrow =n, ncol = t)
+  Storage_realizations_MCN <- matrix(0L, nrow =1, ncol = t)
+ #1st timestep
+     Storage_realizations_GCL[, 1] <- c(((I_in[1] + GCLInflowsdata_samples[, 1])*0.5) + ((Q_in[1] + Q_GCL[1])*0.5)*delta_t + V_in[1])
+ 
+     Storage_realizations_LWG[, 1] <- ((I_in[2] + LWGInflowsdata_samples[, 1])*0.5 + (Q_in[2] + Q_LWG[1])*0.5)*delta_t + V_in[2]
+     
+     Storage_realizations_MCN[, 1] <- ((I_in[3] + MCNInflows[1])*0.5 + (Q_in[3] + Q_MCN[1])*0.5)*delta_t + V_in[3]
+     
+#Rest of the timesteps
+     
+     for (i in 2:t){
+       Storage_realizations_GCL[, i] <- ((GCLInflowsdata_samples[, i-1] + GCLInflowsdata_samples[, i])*0.5 + (Q_GCL[i-1] + Q_GCL[i])*0.5)*delta_t +Storage_realizations_GCL[, i-1]
+       
+       Storage_realizations_LWG[, i] <- ((LWGInflowsdata_samples[, i-1] + LWGInflowsdata_samples[, i])*0.5 + (Q_LWG[i-1] + Q_LWG[i])*0.5)*delta_t +Storage_realizations_LWG[, i-1]
+       
+       Storage_realizations_MCN[i] <- ((MCNInflows[i-1] + MCNInflows[i])*0.5 + (Q_MCN[i-1] + Q_MCN[i])*0.5)*delta_t +Storage_realizations_MCN[i-1]
+     }
+     
+     Storage_realizations <- rbind(Storage_realizations_GCL, Storage_realizations_LWG, Storage_realizations_MCN)
+  
+}
+
 ```
+```{r}
+Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Current_Storage, Current_Inflows, Current_Outflows, Outflows, delta_t = 1, ntimes)
 
-
+```
 
 
