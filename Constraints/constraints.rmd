@@ -28,15 +28,15 @@ devtools::load_all()
 
 #This function calls all the constraints validation function from R and return a list of data where if value < 0 means the constraint is satisfied and if value >0 means constraint is violated
 
-Constraints_validation <- function(mean_sd_simulations, Storage_min, Storage_max, Forebay_min, Forebay_max, Energy_min, Energy_max, Fb_target, rel_index, t){
+Constraints_validation <- function(mean_sd_simulations, Storage_min, Storage_max, Forebay_min, Forebay_max, Energy_min, Energy_max, Fb_target, rel_index, r, t){
   
-  Storage_constraints_validation <- Storage_constraints(mean_sd_simulations, Storage_min, Storage_max, rel_index, t) 
+  Storage_constraints_validation <- Storage_constraints(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t) 
   
-  Forebay_constraints_validation <- Forebay_constraints(mean_sd_simulations, Forebay_min, Forebay_max, rel_index, t)
+  Forebay_constraints_validation <- Forebay_constraints(mean_sd_simulations, Forebay_min, Forebay_max, rel_index, r, t)
 
-  Energy_constraints_validation <- Energy_constraints(mean_sd_simulations, Energy_min, Energy_max, rel_index, t) 
+  Energy_constraints_validation <- Energy_constraints(mean_sd_simulations, Energy_min, Energy_max, rel_index, r, t) 
   
-  ForebayEndofPeriod_constraints_validation <- ForebayEndofPeriod_constraints(mean_sd_simulations, Fb_target, rel_index, t)
+  ForebayEndofPeriod_constraints_validation <- ForebayEndofPeriod_constraints(mean_sd_simulations, Fb_target, rel_index, r, t)
   
   Constraints_validation <- list("Storage_constraints" = Storage_constraints_validation, "Forebay_constraints" = Forebay_constraints_validation, "Energy_constraints" = Energy_constraints_validation, "Forebay_EOP_Constraints" = ForebayEndofPeriod_constraints_validation)
   
@@ -44,7 +44,7 @@ Constraints_validation <- function(mean_sd_simulations, Storage_min, Storage_max
 ```
 
 ```{r}
-Constraints_validation_data <- Constraints_validation(mean_sd_simulations, Storage_min, Storage_max, Forebay_min, Forebay_max, Energy_min, Energy_max, Fb_target, rel_index=0.9, t=14)
+Constraints_validation_data <- Constraints_validation(mean_sd_simulations, Storage_min, Storage_max, Forebay_min, Forebay_max, Energy_min, Energy_max, Fb_target, rel_index=0.9, r=3, t=14)
 
 
 ```

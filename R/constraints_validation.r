@@ -1,11 +1,11 @@
 #```{r}
 #Validating Storage Constraints
 
-Storage_constraints <- function(mean_sd_simulations, Storage_min, Storage_max, rel_index, t){
+Storage_constraints <- function(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t){
   V_min <- rep(Storage_min, t) %>% matrix(ncol = t) 
   V_max <- rep(Storage_max, t) %>% matrix(ncol = t)
-  Storage_mean <- mean_sd_simulations$`Means`[1:3,]
-  Storage_sd <- mean_sd_simulations$`Std dev`[1:3,]
+  Storage_mean <- mean_sd_simulations$`Means`[1:r,]
+  Storage_sd <- mean_sd_simulations$`Std dev`[1:r,]
   V_rel_high <- qnorm(rel_index, Storage_mean, Storage_sd)
   V_rel_low <- qnorm((1-rel_index), Storage_mean, Storage_sd)
   
@@ -24,11 +24,11 @@ Storage_constraints <- function(mean_sd_simulations, Storage_min, Storage_max, r
 #```{r}
 #Validating Forebay Constraints
 
-Forebay_constraints <- function(mean_sd_simulations, Forebay_min, Forebay_max, rel_index, t){
+Forebay_constraints <- function(mean_sd_simulations, Forebay_min, Forebay_max, rel_index, r, t){
   Fb_min <- rep(Forebay_min, t) %>% matrix(ncol = t) 
   Fb_max <- rep(Forebay_max, t) %>% matrix(ncol = t)
-  Forebay_mean <- mean_sd_simulations$`Means`[4:6,]
-  Forebay_sd <- mean_sd_simulations$`Std dev`[4:6,]
+  Forebay_mean <- mean_sd_simulations$`Means`[(r+1):(2*r),]
+  Forebay_sd <- mean_sd_simulations$`Std dev`[(r+1):(2*r),]
   Fb_rel_high <- qnorm(rel_index, Forebay_mean, Forebay_sd)
   Fb_rel_low <- qnorm((1-rel_index), Forebay_mean, Forebay_sd)
   
@@ -47,11 +47,11 @@ Forebay_constraints <- function(mean_sd_simulations, Forebay_min, Forebay_max, r
 #```{r}
 #Validating Energy Constraints
 
-  Energy_constraints <- function(mean_sd_simulations, Energy_min, Energy_max, rel_index, t){
+  Energy_constraints <- function(mean_sd_simulations, Energy_min, Energy_max, rel_index, r, t){
   E_min <- rep(Energy_min, t) %>% matrix(ncol = t) 
   E_max <- rep(Energy_max, t) %>% matrix(ncol = t)
-  E_mean <- mean_sd_simulations$`Means`[7:9,]
-  E_sd <- mean_sd_simulations$`Std dev`[7:9,]
+  E_mean <- mean_sd_simulations$`Means`[((2*r)+1):(3*r),]
+  E_sd <- mean_sd_simulations$`Std dev`[((2*r)+1):(3*r),]
   E_rel_high <- qnorm(rel_index, E_mean, E_sd)
   E_rel_low <- qnorm((1-rel_index), E_mean, E_sd)
   
@@ -70,11 +70,11 @@ Forebay_constraints <- function(mean_sd_simulations, Forebay_min, Forebay_max, r
 # Validating Forebay elevation at end of optimization period, t=14
 # This constraint is only for Grand Coulee reservoir
 
-ForebayEndofPeriod_constraints <- function(mean_sd_simulations, Fb_target, rel_index, t){
+ForebayEndofPeriod_constraints <- function(mean_sd_simulations, Fb_target, rel_index, r, t){
   Fbtarget_lb <- 0.5*Fb_target 
   Fbtarget_ub <- 0.5*Fb_target
-  Forebay_mean <- mean_sd_simulations$`Means`[4,t] %>% t(.)
-  Forebay_sd <- mean_sd_simulations$`Std dev`[4,t] %>% t(.)
+  Forebay_mean <- mean_sd_simulations$`Means`[(r+1),t] %>% t(.)
+  Forebay_sd <- mean_sd_simulations$`Std dev`[(r+1),t] %>% t(.)
   Fbend_rel_high <- qnorm(rel_index, Forebay_mean, Forebay_sd)
   Fbend_rel_low <- qnorm((1-rel_index), Forebay_mean, Forebay_sd)
   
