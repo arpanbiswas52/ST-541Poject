@@ -47,14 +47,28 @@ $Week 7: Due 11/08/2018$
 
 To start the integral part of coding. Writing several functions as required.
 
+Status: In Progress:
+In sim.rmd (Inside Simulations folder), all the fundamental functions required have been coded. The functions are to quantify Storage or reservoirs, Forebay Elevation, Tailwater, Head and Energy generation.
+Therefore, milestone for this week has been reached already.
+
+However, we kept the status in Progress to do analysis regarding the reduction of runtime on the simulation which has been scheduled to complete in next week and will start coding on the constraints and the objective function of the optimization model.
 
 $Week 8: Due 11/15/2018$
 
 Continue coding. 
 
+Status: In Progress
+
 Complete the simulation part. 
 
+Status: In progress. 
+The main coding part for simulation is completed but the analysis of simulations using different variance reduction/ minimal computational cost techniques is still ongoing and will be done next week.
+
 Start the coding for optimization by writing objective functions and constraints(Can confirm this part after completing Week 5 milestone). 
+
+Status: In progress. 
+The codes for constraint validation is done. In next week, we will complete the codes for function evaluation.
+
 
 $Week 9: Due 11/22/2018$
 

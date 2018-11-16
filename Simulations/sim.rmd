@@ -58,6 +58,7 @@ mean_sd_sim <- function(Inflow1, Inflow2, Storage_initial, Inflow_initial, Outfl
   
   Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Current_Storage, Current_Inflows, Current_Outflows, Outflows, delta_t, t, n_samples)
   
+  browser()
   Forebay_largerealizations <- Forebay_realizations(Storage_largerealizations, Fb_coeff, t, n_samples)
   
   Tailwater_largerealizations <- Tailwater_realizations(Forebay_largerealizations, Current_Outflows, Current_Forebay, Current_Tailwater, Tw_coeff, Outflows, t, n_samples)
