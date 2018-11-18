@@ -1,1 +1,38 @@
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = "hide")
+library(tidyverse)
+library(here)
+library(debugr)
+```
+```{r}
+#Sampling Price data realizations
+Price_Mean <- colMeans(Pricedata[,2:15])
+#ntimes <- 100
 
+Price_samples <- sample(Price_Mean, (ntimes^2)*length(Price_Mean),  replace = TRUE) %>% matrix(nrow = ntimes^2)
+
+```
+```{r}
+devtools::load_all() 
+```
+
+```{r}
+
+obj_Func_eval <- function(mean_sd_simulations, Price, t, ntimes){
+  Total_Revenue_stat <- Total_Revenue_cal(mean_sd_simulations, Price, t, ntimes)
+  
+  #Calculating Robust objective for maximizing the objective function
+  
+  Risk_coeff <- 10^6
+  
+  Robust_obj <- Total_Revenue_stat[1] - ((Total_Revenue_stat[2]^2)/(2*Risk_coeff))
+  
+  obj_Func_eval <- -Robust_obj
+}
+  
+  
+```
+```{r}
+obj_Func_eval <- obj_Func_eval(mean_sd_simulations, Price_samples, t= 14, ntimes)
+  
+```
