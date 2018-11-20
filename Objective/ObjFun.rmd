@@ -3,6 +3,8 @@ knitr::opts_chunk$set(echo = TRUE, results = "hide")
 library(tidyverse)
 library(here)
 library(debugr)
+library(furrr)
+library(tictoc)
 ```
 ```{r}
 #Sampling Price data realizations
@@ -33,6 +35,7 @@ obj_Func_eval <- function(mean_sd_simulations, Price, t, ntimes){
   
 ```
 ```{r}
-obj_Func_eval <- obj_Func_eval(mean_sd_simulations, Price_samples, t= 14, ntimes)
-  
+tic()
+obj_Func_val <- obj_Func_eval(mean_sd_simulations, Price_samples, t= 14, ntimes)
+toc()
 ```

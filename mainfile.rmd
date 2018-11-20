@@ -14,9 +14,9 @@ library(here)
 #The input data are the realizations of Inflows, Price for 14 days.
 
 library(readr)
-GCLInflowsdata <- read_csv("DATA/GCLInflowsdata.csv")
-LWGInflowsdata <- read_csv("DATA/LWGInflowsdata.csv")
-Pricedata <- read_csv("DATA/Pricedata.csv")
+GCLInflowsdata <- read_csv("data/GCLInflowsdata.csv")
+LWGInflowsdata <- read_csv("data/LWGInflowsdata.csv")
+Pricedata <- read_csv("data/Pricedata.csv")
 GCLInflowsdata
 LWGInflowsdata
 Pricedata

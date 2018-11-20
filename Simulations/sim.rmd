@@ -41,7 +41,7 @@ GCLInflowsdata_Mean <- rowMeans(GCLInflowsdata[,2:28])
 LWGInflowsdata_Mean <- rowMeans(LWGInflowsdata[,2:28])
 #GCLInflowsdata_Mean
 #LWGInflowsdata_Mean
-ntimes <- 100
+ntimes <- 500
 
 GCLInflowsdata_samples <- sample(GCLInflowsdata_Mean, length(GCLInflowsdata_Mean)*ntimes,  replace = TRUE) %>% matrix(nrow = ntimes)
 
