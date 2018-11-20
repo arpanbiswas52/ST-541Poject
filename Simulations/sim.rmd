@@ -8,8 +8,9 @@ library(debugr)
 **Simulations for Quantifying Storage, Forebay Elevation, Tailwater Elevation, Head and Energy**
 ```{r}
 #Setting initial conditions
-#t <- 14 # number of daily timesteps for 14 days
-#r <- 3 # number of reservoirs = 3 
+t <- 14 # number of daily timesteps for 14 days
+r <- 3 # number of reservoirs = 3 
+ntimes<- 500
 Current_Inflows <- c(81.45, 11.04, 131.27) 
 Current_Outflows <- c(55.72, 13.54, 127.03)
 Current_Storage <- c(2260, 47.8, 79.1)
@@ -20,6 +21,11 @@ Outflows_ub <- c(294.04, 150, 214.2)
 Fb_coeff <- matrix(c(-3.63e-6, 0.0406, 1208, -3.6467e-4, 0.2689, 724, 0, 0.0571, 334.5), nrow = 3, ncol = 3, byrow = TRUE)
 Tw_coeff <- matrix(c(447.97, 122.81, 18.60, 0.0910, 0.0210, 0.0202, 0.5286, 0.8060, 0.9234), nrow = 3, ncol = 3, byrow = TRUE)
 #Will add more
+```
+
+```{r}
+devtools::load_all()
+devtools::load_data()
 ```
 
 ```{r}
@@ -34,27 +40,17 @@ Tw_coeff <- matrix(c(447.97, 122.81, 18.60, 0.0910, 0.0210, 0.0202, 0.5286, 0.80
 ```
 
 ```{r}
+samples <- get_samples(t, ntimes)
 
-# Sampling Inflows data realizations 
-
-GCLInflowsdata_Mean <- rowMeans(GCLInflowsdata[,2:28])
-LWGInflowsdata_Mean <- rowMeans(LWGInflowsdata[,2:28])
-#GCLInflowsdata_Mean
-#LWGInflowsdata_Mean
-ntimes <- 500
-
-GCLInflowsdata_samples <- sample(GCLInflowsdata_Mean, length(GCLInflowsdata_Mean)*ntimes,  replace = TRUE) %>% matrix(nrow = ntimes)
-
-LWGInflowsdata_samples <- sample(LWGInflowsdata_Mean, length(LWGInflowsdata_Mean)*ntimes,  replace = TRUE) %>% matrix(nrow = ntimes)
 ```
-```{r}
-devtools::load_all()
-```
+
 
 
 ```{r}
 #Quantifying mean and standard deviation for the QoI
-mean_sd_sim <- function(Inflow1, Inflow2, Storage_initial, Inflow_initial, Outflow_initial,  Forebay_initial, Tailwater_initial, Outflows, Fb_coeff, Tw_coeff, delta_t, efficieny, t, r, n_samples){
+mean_sd_sim <- function(samples, Storage_initial, Inflow_initial, Outflow_initial,  Forebay_initial, Tailwater_initial, Outflows, Fb_coeff, Tw_coeff, delta_t, efficieny, t, r, n_samples){
+  GCLInflowsdata_samples<- samples$GCLInflowsdata_samples
+  LWGInflowsdata_samples<- samples$LWGInflowsdata_samples
   
   Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Current_Storage, Current_Inflows, Current_Outflows, Outflows, delta_t, t, n_samples)
   
@@ -122,7 +118,7 @@ mean_sd_sim <- function(Inflow1, Inflow2, Storage_initial, Inflow_initial, Outfl
 
 Outflows <- c(55.72, 13.54, 127.03) %>% rep(14) %>% matrix(ncol = 14)
 
-mean_sd_simulations <- mean_sd_sim(GCLInflowsdata_samples, LWGInflowsdata_samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, efficieny=0.75, t=14, r=3, ntimes)
+mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, efficieny=0.75, t=14, r=3, ntimes)
 
 ```
 ```{r}

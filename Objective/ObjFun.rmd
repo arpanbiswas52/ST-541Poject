@@ -6,21 +6,12 @@ library(debugr)
 library(furrr)
 library(tictoc)
 ```
-```{r}
-#Sampling Price data realizations
-Price_Mean <- colMeans(Pricedata[,2:15])
-#ntimes <- 100
 
-Price_samples <- sample(Price_Mean, (ntimes^2)*length(Price_Mean),  replace = TRUE) %>% matrix(nrow = ntimes^2)
-
-```
-```{r}
-devtools::load_all() 
-```
 
 ```{r}
 
-obj_Func_eval <- function(mean_sd_simulations, Price, t, ntimes){
+obj_Func_eval <- function(mean_sd_simulations, samples, t, ntimes){
+  Price <- samples$Price_samples
   Total_Revenue_stat <- Total_Revenue_cal(mean_sd_simulations, Price, t, ntimes)
   
   #Calculating Robust objective for maximizing the objective function
@@ -36,6 +27,6 @@ obj_Func_eval <- function(mean_sd_simulations, Price, t, ntimes){
 ```
 ```{r}
 tic()
-obj_Func_val <- obj_Func_eval(mean_sd_simulations, Price_samples, t= 14, ntimes)
+obj_Func_val <- obj_Func_eval(mean_sd_simulations, samples, t= 14, ntimes)
 toc()
 ```
