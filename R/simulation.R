@@ -1,7 +1,8 @@
 #```{r}
 # Quantifying storage
 
-Storage_realizations <- function(Inflow1, Inflow2, Storage_initial, Inflow_initial, Outflow_initial, Outflows, delta_t, t, n){
+Storage_realizations <- function(Inflow1, Inflow2, Storage_initial, Inflow_initial, Outflow_initial, Outflows, delta_t, t, ntimes){
+  n<-ntimes
   GCLInflowsdata_samples <- Inflow1
   LWGInflowsdata_samples <- Inflow2
   V_in <- Storage_initial
@@ -46,7 +47,8 @@ Storage_realizations <- function(Inflow1, Inflow2, Storage_initial, Inflow_initi
 #```{r}
 #Quantifying Forebay Elevation
 
-Forebay_realizations <- function(Storage_largerealizations, Fb_coeff, t, n){
+Forebay_realizations <- function(Storage_largerealizations, Fb_coeff, t, ntimes){
+  n<- ntimes
   Storage_realizations_GCL <- Storage_largerealizations[1:n,]
   Storage_realizations_LWG <- Storage_largerealizations[(n+1):(2*n),]
   Storage_realizations_MCN <- Storage_largerealizations[(2*n)+1,]
@@ -76,8 +78,8 @@ Forebay_realizations <- function(Storage_largerealizations, Fb_coeff, t, n){
 
 #Quantifying Tailwater
 
-Tailwater_realizations <- function(Forebay_largerealizations, Outflow_initial, Forebay_initial, Tailwater_initial, Tw_coeff, Outflows, t, n){
-  
+Tailwater_realizations <- function(Forebay_largerealizations, Outflow_initial, Forebay_initial, Tailwater_initial, Tw_coeff, Outflows, t, ntimes){
+n<- ntimes
   Q_GCL <- Outflows[1, ]
   Q_LWG <- Outflows[2, ]
   Q_MCN <- Outflows[3, ]
@@ -132,8 +134,9 @@ Head_realizations <- function(Forebay_largerealizations, Tailwater_largerealizat
 #```{r}
 #Quantifying Energy
 
-Energy_realizations <- function(Head_largerealizations, Outflows, efficieny, n){
+Energy_realizations <- function(Head_largerealizations, Outflows, efficieny, ntimes){
   e <- efficieny
+  n<- ntimes
   Q_GCL <- Outflows[1, ] %>% rep(n) %>% matrix(nrow = n, byrow = TRUE)
   Q_LWG <- Outflows[2, ] %>% rep(n) %>% matrix(nrow = n, byrow = TRUE)
   Q_MCN <- Outflows[3, ]
@@ -142,8 +145,59 @@ Energy_realizations <- function(Head_largerealizations, Outflows, efficieny, n){
   Energy_realizations <- e*Head_largerealizations*0.3048*Q_out*28.31684*g*10^-3
 }
 
-#```
-#```{r}
-#Energy_largerealizations <- Energy_realizations(Head_largerealizations, Outflows, efficieny= 0.75, ntimes)
-
-#```
+#Quantifying mean and standard deviation for the QoI
+mean_sd_sim <- function(samples, Storage_initial, Inflow_initial, Outflow_initial,  Forebay_initial, Tailwater_initial, Outflows, Fb_coeff, Tw_coeff, delta_t, efficieny, t, r, ntimes){
+  GCLInflowsdata_samples<- samples$GCLInflowsdata_samples
+  LWGInflowsdata_samples<- samples$LWGInflowsdata_samples
+  #browser()
+  Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Current_Storage, Current_Inflows, Current_Outflows, Outflows, delta_t, t, ntimes)
+  
+  #browser()
+  Forebay_largerealizations <- Forebay_realizations(Storage_largerealizations, Fb_coeff, t, ntimes)
+  
+  Tailwater_largerealizations <- Tailwater_realizations(Forebay_largerealizations, Current_Outflows, Current_Forebay, Current_Tailwater, Tw_coeff, Outflows, t, ntimes)
+  
+  Head_largerealizations <- Head_realizations(Forebay_largerealizations, Tailwater_largerealizations)
+  
+  Energy_largerealizations <- Energy_realizations(Head_largerealizations, Outflows, efficieny, ntimes)
+  n <- ntimes
+  
+  Storage_mean <- matrix(0L, nrow =r, ncol = t)
+  Storage_mean2 <- matrix(0L, nrow =r, ncol = t)
+  Forebay_mean <- matrix(0L, nrow =r, ncol = t)
+  Forebay_mean2 <- matrix(0L, nrow =r, ncol = t)
+  Energy_mean <- matrix(0L, nrow =r, ncol = t)
+  Energy_mean2 <- matrix(0L, nrow =r, ncol = t)
+  
+  Storage_mean[1, ] <- colMeans(Storage_largerealizations[1:n, ])
+  Storage_mean[2, ] <- colMeans(Storage_largerealizations[(n+1):(2*n), ])
+  Storage_mean[3, ] <- (Storage_largerealizations[(2*n)+1, ])
+  Storage_mean2[1, ] <- colMeans(Storage_largerealizations[1:n, ]^2)
+  Storage_mean2[2, ] <- colMeans(Storage_largerealizations[(n+1):(2*n), ]^2)
+  Storage_mean2[3, ] <- (Storage_largerealizations[(2*n)+1, ]^2)
+  
+  Storage_sd <- sqrt(Storage_mean2 - (Storage_mean^2))
+  
+  Forebay_mean[1, ] <- colMeans(Forebay_largerealizations[1:n, ])
+  Forebay_mean[2, ] <- colMeans(Forebay_largerealizations[(n+1):(2*n), ])
+  Forebay_mean[3, ] <- (Forebay_largerealizations[(2*n)+1, ])
+  Forebay_mean2[1, ] <- colMeans(Forebay_largerealizations[1:n, ]^2)
+  Forebay_mean2[2, ] <- colMeans(Forebay_largerealizations[(n+1):(2*n), ]^2)
+  Forebay_mean2[3, ] <- (Forebay_largerealizations[(2*n)+1, ]^2)
+  
+  Forebay_sd <- sqrt(Forebay_mean2 - (Forebay_mean^2))
+  
+  Energy_mean[1, ] <- colMeans(Energy_largerealizations[1:n, ])
+  Energy_mean[2, ] <- colMeans(Energy_largerealizations[(n+1):(2*n), ])
+  Energy_mean[3, ] <- (Energy_largerealizations[(2*n)+1, ])
+  Energy_mean2[1, ] <- colMeans(Energy_largerealizations[1:n, ]^2)
+  Energy_mean2[2, ] <- colMeans(Energy_largerealizations[(n+1):(2*n), ]^2)
+  Energy_mean2[3, ] <- (Energy_largerealizations[(2*n)+1, ]^2)
+  
+  Energy_sd <- sqrt(Energy_mean2 - (Energy_mean^2))
+  
+  mean_sim <- rbind(Storage_mean, Forebay_mean, Energy_mean)
+  sd_sim <- rbind(Storage_sd, Forebay_sd, Energy_sd)
+  
+  mean_sd_sim <- list("Means" = mean_sim, "Std dev" = sd_sim, "Storage realizations" = Storage_largerealizations, "Forebay realizations" = Forebay_largerealizations, "Tailwater realizations" = Tailwater_largerealizations, "Head realizations" = Head_largerealizations, "Energy_realizations" = Energy_largerealizations)
+}

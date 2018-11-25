@@ -30,3 +30,5 @@ get_samples <- function(t, ntimes){
                       "Price_samples" = Price_samples)
 }
 #```
+
+

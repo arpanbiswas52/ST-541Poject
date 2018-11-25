@@ -26,7 +26,7 @@ devtools::load_all()
 
 ```{r}
 
-#This function calls all the constraints validation function from R and return a list of data where if value < 0 means the constraint is satisfied and if value >0 means constraint is violated
+#This function calls all the constraints validation function from R and return a list of data where if value >= 0 means the constraint is satisfied and if value <0 means constraint is violated
 
 Constraints_validation <- function(mean_sd_simulations, Storage_min, Storage_max, Forebay_min, Forebay_max, Energy_min, Energy_max, Fb_target, rel_index, r, t){
   

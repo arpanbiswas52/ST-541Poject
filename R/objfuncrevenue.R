@@ -46,3 +46,36 @@ Total_Revenue_cal <- function(mean_sd_simulations, Price, t, ntimes){
   Total_Revenue_sd <- sqrt(Total_Revenue_Mean2 - (Total_Revenue_Mean^2))
   Total_Revenue_stat = c(Total_Revenue_Mean, Total_Revenue_sd)
 }
+
+
+obj_Func_eval <- function(X, samples, initial_cond){
+  
+  
+  Price <- samples$Price_samples
+  Current_Storage <- initial_cond$Current_Storage
+  Current_Inflows <- initial_cond$Current_Inflows
+  Current_Outflows <- initial_cond$Current_Outflows
+  Current_Forebay <- initial_cond$Current_Forebay
+  Current_Tailwater <- initial_cond$Current_Tailwater
+  Fb_coeff<- initial_cond$Fb_coeff
+  Tw_coeff<- initial_cond$Tw_coeff
+  t<- initial_cond$t
+  r<- initial_cond$r
+  ntimes <- initial_cond$ntimes
+  Outflows<- X %>% matrix(ncol = t, byrow = TRUE)
+  #browser()
+  mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                     Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                     efficieny=0.75, t, r, ntimes)
+  Total_Revenue_stat <- Total_Revenue_cal(mean_sd_simulations, Price, t, ntimes)
+  
+  #Calculating Robust objective for maximizing the objective function
+  
+  Risk_coeff <- 10^6
+  
+  Robust_obj <- Total_Revenue_stat[1] - ((Total_Revenue_stat[2]^2)/(2*Risk_coeff))
+  
+  obj_Func_eval <- -Robust_obj
+  #browser()
+}
+

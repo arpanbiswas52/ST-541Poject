@@ -26,7 +26,7 @@ obj_Func_eval <- function(mean_sd_simulations, samples, t, ntimes){
   
 ```
 ```{r}
-tic()
+#tic()
 obj_Func_val <- obj_Func_eval(mean_sd_simulations, samples, t= 14, ntimes)
-toc()
+#toc()
 ```

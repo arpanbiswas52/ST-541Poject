@@ -4,6 +4,10 @@
 knitr::opts_chunk$set(echo = TRUE, results = "hide")
 library(tidyverse)
 library(here)
+library(nloptr)
+library(debugr)
+library(furrr)
+library(tictoc)
 ```
 
 
@@ -21,7 +25,57 @@ GCLInflowsdata
 LWGInflowsdata
 Pricedata
 ```
+```{r}
+#Setting initial conditions
+t <- 14 # number of daily timesteps for 14 days
+r <- 3 # number of reservoirs = 3 
+rel_index <- 0.9
+ntimes<- 100
+Current_Inflows <- c(81.45, 11.04, 131.27) 
+Current_Outflows <- c(55.72, 13.54, 127.03)
+Current_Storage <- c(2260, 47.8, 79.1)
+Current_Forebay <- c(1280.9, 735.93, 339.14)
+Current_Tailwater <- c(957.46, 636.41, 265.03)
+Outflows_lb <- c(1.13, 8.2, 7)
+Outflows_ub <- c(294.04, 150, 214.2) 
+Fb_coeff <- matrix(c(-3.63e-6, 0.0406, 1208, -3.6467e-4, 0.2689, 724, 0, 0.0571, 334.5), nrow = 3, ncol = 3, byrow = TRUE)
+Tw_coeff <- matrix(c(447.97, 122.81, 18.60, 0.0910, 0.0210, 0.0202, 0.5286, 0.8060, 0.9234), nrow = 3, ncol = 3, byrow = TRUE)
+Storage_min <- c(0, 0, 0) 
+Storage_max <- c(2814.3, 71.2, 130)
+Forebay_min <- c(1208, 733, 334)
+Forebay_max <- c(1295, 738, 342)
+Energy_min <- c(0, 0, 250)
+Energy_max <- c(6735, 930, 1120)
+Fb_target <- 1281 
+
+initial_cond <- list("Current_Inflows"=Current_Inflows, "Current_Outflows"=Current_Outflows,"Current_Storage" =Current_Storage,"Current_Forebay" = Current_Forebay, "Current_Tailwater"=Current_Tailwater, "Outflows_lb"=Outflows_lb, "Outflows_ub"=Outflows_ub, "Fb_coeff" =Fb_coeff, "Tw_coeff"=Tw_coeff, "Storage_min"=Storage_min, "Storage_max"=Storage_max,"Forebay_min"=Forebay_min,"Forebay_max"=Forebay_max, "Energy_min" =Energy_min, "Energy_max"=Energy_max,"Fb_target"=Fb_target, "t"=t, "r"=r, "rel_index"=rel_index, "ntimes" = ntimes)
+
+```
+
+```{r}
+#loading all functions like objective functions, functions for simulations, functions for constraint validations and data
+devtools::load_all()
+devtools::load_data()
+```
+
+```{r}
+#Setting starting point, upper bound and lower bound
+x0<- rep(Current_Outflows, each= t) 
+lb <- rep(Outflows_lb, each= t) 
+ub <- rep(Outflows_ub, each= t) 
+
+#Generating samples
+set.seed(1)
+samples <- get_samples(t, ntimes)
+
+```
 
 ```{r}
 
+#Run optimization
+optim<- slsqp(x0, obj_Func_eval, gr = NULL, lower = lb, upper = ub, Constraints_validation,
+  hinjac = NULL, heq = NULL, heqjac = NULL, nl.info = FALSE,
+  control = list(xtol_rel = 1e-10),samples,initial_cond)
+(opt_Q <- optim$par %>% matrix(ncol = t, byrow = TRUE))
+(opt_R <- optim$value)
 ```
