@@ -77,5 +77,6 @@ optim<- slsqp(x0, obj_Func_eval, gr = NULL, lower = lb, upper = ub, Constraints_
   hinjac = NULL, heq = NULL, heqjac = NULL, nl.info = FALSE,
   control = list(xtol_rel = 1e-10),samples,initial_cond)
 (opt_Q <- optim$par %>% matrix(ncol = t, byrow = TRUE))
-(opt_R <- optim$value)
+(opt_R <- -optim$value)
+
 ```
