@@ -19,16 +19,24 @@ get_samples_antithetic <- function(t, ntimes){
   max_Price<- rep((b_Price), (ntimes^2)/2)
   min_Price <- rep((a_Price), (ntimes^2)/2)
   
+  set.seed(1)
+  GCLInflowsdata_first_in_pair <- rnorm((ntimes/2)*t, GCLInflows_Mean, GCLInflows_sd) 
+  GCLInflowsdata_second_in_pair <- (2*GCLInflows_Mean)- GCLInflowsdata_first_in_pair
   
-  GCLInflowsdata_first_in_pair <- rnorm((ntimes/2)*t, GCLInflows_Mean, GCLInflows_sd) %>% matrix(nrow = ntimes/2, byrow = TRUE)
-  GCLInflowsdata_second_in_pair <- 1- GCLInflowsdata_first_in_pair
+  GCLInflowsdata_first_in_pair <- matrix(GCLInflowsdata_first_in_pair, nrow = ntimes/2, byrow = TRUE)
+  GCLInflowsdata_second_in_pair<- matrix(GCLInflowsdata_second_in_pair, nrow = ntimes/2, byrow = TRUE)
+    
+  LWGInflowsdata_first_in_pair <- rnorm((ntimes/2)*t, LWGInflows_Mean, LWGInflows_sd) 
+  LWGInflowsdata_second_in_pair <- (2*LWGInflows_Mean)- LWGInflowsdata_first_in_pair
   
+  LWGInflowsdata_first_in_pair <- matrix(LWGInflowsdata_first_in_pair, nrow = ntimes/2, byrow = TRUE)
+  LWGInflowsdata_second_in_pair<- matrix(LWGInflowsdata_second_in_pair, nrow = ntimes/2, byrow = TRUE)
   
-  LWGInflowsdata_first_in_pair <- rnorm((ntimes/2)*t, LWGInflows_Mean, LWGInflows_sd) %>% matrix(nrow = ntimes/2, byrow = TRUE)
-  LWGInflowsdata_second_in_pair <- 1- LWGInflowsdata_first_in_pair
+  Price_first_in_pair <- runif(((ntimes^2)/2)*t, min_Price, max_Price) 
+  Price_second_in_pair <- min_Price + max_Price - Price_first_in_pair
   
-  Price_first_in_pair <- runif(((ntimes^2)/2)*t, min_Price, max_Price) %>% matrix(nrow = ((ntimes^2)/2), byrow = TRUE)
-  Price_second_in_pair <- 1- Price_first_in_pair
+  Price_first_in_pair <- matrix(Price_first_in_pair, nrow = ((ntimes^2)/2), byrow = TRUE)
+  Price_second_in_pair <- matrix(Price_second_in_pair, nrow = ((ntimes^2)/2), byrow = TRUE)
   
   GCLInflowsdata_samples <- rbind(GCLInflowsdata_first_in_pair, GCLInflowsdata_second_in_pair)
   LWGInflowsdata_samples <- rbind(LWGInflowsdata_first_in_pair, LWGInflowsdata_second_in_pair)
@@ -92,6 +100,7 @@ get_samples_impsampling <- function(t, ntimes){
 
 
 #Quantifying mean and standard deviation for the QoI
+##Antithetic approach
 mean_sd_sim_antithetic <- function(samples, Storage_initial, Inflow_initial, Outflow_initial,  Forebay_initial, Tailwater_initial, Outflows, Fb_coeff, Tw_coeff, delta_t, efficieny, t, r, n_samples){
   GCLInflowsdata_samples<- samples_antithetic$GCLInflowsdata_samples
   LWGInflowsdata_samples<- samples_antithetic$LWGInflowsdata_samples
@@ -109,11 +118,14 @@ mean_sd_sim_antithetic <- function(samples, Storage_initial, Inflow_initial, Out
   n <- n_samples
   
   Storage_mean <- matrix(0L, nrow =r, ncol = t)
-  Storage_mean2 <- matrix(0L, nrow =r, ncol = t)
+  #Storage_mean2 <- matrix(0L, nrow =r, ncol = t)
+  Storage_sd <- matrix(0L, nrow =r, ncol = t)
   Forebay_mean <- matrix(0L, nrow =r, ncol = t)
-  Forebay_mean2 <- matrix(0L, nrow =r, ncol = t)
+  #Forebay_mean2 <- matrix(0L, nrow =r, ncol = t)
+  Forebay_sd <- matrix(0L, nrow =r, ncol = t)
   Energy_mean <- matrix(0L, nrow =r, ncol = t)
-  Energy_mean2 <- matrix(0L, nrow =r, ncol = t)
+  #Energy_mean2 <- matrix(0L, nrow =r, ncol = t)
+  Energy_sd <- matrix(0L, nrow =r, ncol = t)
   
   pair_average <- function(x1, x2){
     1/2 * (x1 + x2)
@@ -126,11 +138,13 @@ mean_sd_sim_antithetic <- function(samples, Storage_initial, Inflow_initial, Out
   Storage_mean[1, ] <- colMeans(pair_averages_Storage_GCL)
   Storage_mean[2, ] <- colMeans(pair_averages_Storage_LWG)
   Storage_mean[3, ] <- (Storage_largerealizations[(2*n)+1, ])
-  Storage_mean2[1, ] <- colMeans(pair_averages_Storage_GCL^2)
-  Storage_mean2[2, ] <- colMeans(pair_averages_Storage_LWG^2)
-  Storage_mean2[3, ] <- (Storage_largerealizations[(2*n)+1, ]^2)
+  #Storage_mean2[1, ] <- colMeans(pair_averages_Storage_GCL^2)
+  #Storage_mean2[2, ] <- colMeans(pair_averages_Storage_LWG^2)
+  #Storage_mean2[3, ] <- (Storage_largerealizations[(2*n)+1, ]^2)
   
-  Storage_sd <- sqrt(Storage_mean2 - (Storage_mean^2))
+  #Storage_sd <- sqrt(Storage_mean2 - (Storage_mean^2))
+  
+  
   
   pair_averages_Forebay_GCL <- pair_average(Forebay_largerealizations[1:(n/2), ], Forebay_largerealizations[((n/2)+1):n, ])
   pair_averages_Forebay_LWG <- pair_average(Forebay_largerealizations[(n+1):((n/2)+n), ], Forebay_largerealizations[((n/2)+n+1) :(2*n), ])
@@ -138,11 +152,11 @@ mean_sd_sim_antithetic <- function(samples, Storage_initial, Inflow_initial, Out
   Forebay_mean[1, ] <- colMeans(pair_averages_Forebay_GCL)
   Forebay_mean[2, ] <- colMeans(pair_averages_Forebay_LWG)
   Forebay_mean[3, ] <- (Forebay_largerealizations[(2*n)+1, ])
-  Forebay_mean2[1, ] <- colMeans(pair_averages_Forebay_GCL^2)
-  Forebay_mean2[2, ] <- colMeans(pair_averages_Forebay_LWG^2)
-  Forebay_mean2[3, ] <- (Forebay_largerealizations[(2*n)+1, ]^2)
+  #Forebay_mean2[1, ] <- colMeans(pair_averages_Forebay_GCL^2)
+  #Forebay_mean2[2, ] <- colMeans(pair_averages_Forebay_LWG^2)
+  #Forebay_mean2[3, ] <- (Forebay_largerealizations[(2*n)+1, ]^2)
   
-  Forebay_sd <- sqrt(Forebay_mean2 - (Forebay_mean^2))
+  # Forebay_sd <- sqrt(Forebay_mean2 - (Forebay_mean^2))
   
   pair_averages_Energy_GCL <- pair_average(Energy_largerealizations[1:(n/2), ], Forebay_largerealizations[((n/2)+1):n, ])
   pair_averages_Energy_LWG <- pair_average(Energy_largerealizations[(n+1):((n/2)+n), ], Forebay_largerealizations[((n/2)+n+1):(2*n), ])
@@ -150,15 +164,27 @@ mean_sd_sim_antithetic <- function(samples, Storage_initial, Inflow_initial, Out
   Energy_mean[1, ] <- colMeans(pair_averages_Energy_GCL)
   Energy_mean[2, ] <- colMeans(pair_averages_Energy_LWG)
   Energy_mean[3, ] <- (Energy_largerealizations[(2*n)+1, ])
-  Energy_mean2[1, ] <- colMeans(pair_averages_Energy_GCL^2)
-  Energy_mean2[2, ] <- colMeans(pair_averages_Energy_LWG^2)
-  Energy_mean2[3, ] <- (Energy_largerealizations[(2*n)+1, ]^2)
+  # Energy_mean2[1, ] <- colMeans(pair_averages_Energy_GCL^2)
+  #Energy_mean2[2, ] <- colMeans(pair_averages_Energy_LWG^2)
+  #Energy_mean2[3, ] <- (Energy_largerealizations[(2*n)+1, ]^2)
   
-  Energy_sd <- sqrt(Energy_mean2 - (Energy_mean^2))
+  # Energy_sd <- sqrt(Energy_mean2 - (Energy_mean^2))
   
+  for (i in 1:t){
+    Storage_sd[1,i ] <- sd(pair_averages_Storage_GCL[ ,i])
+    Storage_sd[2,i ] <- sd(pair_averages_Storage_LWG[ ,i])
+    
+    Forebay_sd[1,i ] <- sd(pair_averages_Forebay_GCL[ ,i])
+    Forebay_sd[2,i ] <- sd(pair_averages_Forebay_LWG[ ,i])
+    
+    Energy_sd[1,i ] <- sd(pair_averages_Energy_GCL[ ,i])
+    Energy_sd[2,i ] <- sd(pair_averages_Energy_LWG[ ,i])
+  } 
+  Storage_sd[3, ] <- 0*c(1:t)
+  Forebay_sd[3, ] <- 0*c(1:t)
+  Energy_sd[3, ] <- 0*c(1:t)
   mean_sim <- rbind(Storage_mean, Forebay_mean, Energy_mean)
   sd_sim <- rbind(Storage_sd, Forebay_sd, Energy_sd)
   
   mean_sd_sim_antithetic <- list("Means" = mean_sim, "Std dev" = sd_sim, "Storage realizations" = Storage_largerealizations, "Forebay realizations" = Forebay_largerealizations, "Tailwater realizations" = Tailwater_largerealizations, "Head realizations" = Head_largerealizations, "Energy_realizations" = Energy_largerealizations)
 }
-

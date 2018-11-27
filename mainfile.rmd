@@ -65,18 +65,20 @@ lb <- rep(Outflows_lb, each= t)
 ub <- rep(Outflows_ub, each= t) 
 
 #Generating samples
-set.seed(1)
-samples <- get_samples(t, ntimes)
+#samples <- get_samples(t, ntimes)
+samples_antithetic <- get_samples_antithetic(t,ntimes)
+samples <- samples_antithetic
 
 ```
 
 ```{r}
-
+plan(sequential)
+tic()
 #Run optimization
 optim<- slsqp(x0, obj_Func_eval, gr = NULL, lower = lb, upper = ub, Constraints_validation,
   hinjac = NULL, heq = NULL, heqjac = NULL, nl.info = FALSE,
   control = list(xtol_rel = 1e-10),samples,initial_cond)
 (opt_Q <- optim$par %>% matrix(ncol = t, byrow = TRUE))
 (opt_R <- -optim$value)
-
+toc()
 ```

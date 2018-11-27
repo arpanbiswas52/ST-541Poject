@@ -3,6 +3,7 @@
 
 Storage_realizations <- function(Inflow1, Inflow2, Storage_initial, Inflow_initial, Outflow_initial, Outflows, delta_t, t, ntimes){
   n<-ntimes
+  #browser()
   GCLInflowsdata_samples <- Inflow1
   LWGInflowsdata_samples <- Inflow2
   V_in <- Storage_initial
@@ -15,6 +16,7 @@ Storage_realizations <- function(Inflow1, Inflow2, Storage_initial, Inflow_initi
   Storage_realizations_GCL <- matrix(0L, nrow =n, ncol = t)
   Storage_realizations_LWG <- matrix(0L, nrow =n, ncol = t)
   Storage_realizations_MCN <- matrix(0L, nrow =1, ncol = t)
+  #browser()
   #1st timestep
   Storage_realizations_GCL[, 1] <- ((I_in[1] + GCLInflowsdata_samples[, 1])*0.5) + ((Q_in[1] + Q_GCL[1])*0.5)*delta_t + V_in[1]
   
@@ -31,7 +33,7 @@ Storage_realizations <- function(Inflow1, Inflow2, Storage_initial, Inflow_initi
     
     Storage_realizations_MCN[i] <- ((MCNInflows[i-1] + MCNInflows[i])*0.5 + (Q_MCN[i-1] + Q_MCN[i])*0.5)*delta_t +Storage_realizations_MCN[i-1]
   }
-  
+  #browser()
   Storage_realizations <- rbind(Storage_realizations_GCL, Storage_realizations_LWG, Storage_realizations_MCN)
   
 }
@@ -201,3 +203,4 @@ mean_sd_sim <- function(samples, Storage_initial, Inflow_initial, Outflow_initia
   
   mean_sd_sim <- list("Means" = mean_sim, "Std dev" = sd_sim, "Storage realizations" = Storage_largerealizations, "Forebay realizations" = Forebay_largerealizations, "Tailwater realizations" = Tailwater_largerealizations, "Head realizations" = Head_largerealizations, "Energy_realizations" = Energy_largerealizations)
 }
+

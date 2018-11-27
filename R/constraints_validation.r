@@ -114,8 +114,10 @@ Constraints_validation <- function(X){
   Energy_max <- c(6735, 930, 1120)
   Fb_target <- 1281 
   
-  set.seed(1)
-  samples <- get_samples(t, ntimes)
+  #set.seed(1)
+  #samples <- get_samples(t, ntimes)
+  samples_antithetic <- get_samples_antithetic(t,ntimes)
+  samples <- samples_antithetic
   #Current_Storage <- initial_cond$Current_Storage
   #Current_Inflows <- initial_cond$Current_Inflows
   #Current_Outflows <- initial_cond$Current_Outflows
@@ -136,9 +138,12 @@ Constraints_validation <- function(X){
   #Fb_target <- initial_cond$Fb_target
   
   
-  mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-                                     Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-                                     efficieny=0.75, t, r, ntimes)
+  #mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+  #                                   Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+  #                                   efficieny=0.75, t, r, ntimes)
+  mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                                Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                                efficieny=0.75, t, r, ntimes)
   
   Storage_constraints_validation <- Storage_constraints(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t) 
   

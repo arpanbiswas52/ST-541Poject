@@ -21,6 +21,7 @@ get_samples <- function(t, ntimes){
   LWGInflows_sd<- rep(LWGInflowsdata_sd, ntimes)
   max_Price<- rep((b_Price), ntimes^2)
   min_Price <- rep((a_Price), ntimes^2)
+  set.seed(1)
   GCLInflowsdata_samples <- rnorm(ntimes*t, GCLInflows_Mean, GCLInflows_sd) %>% matrix(nrow = ntimes, byrow = TRUE)
   
   LWGInflowsdata_samples <- rnorm(ntimes*t, LWGInflows_Mean, LWGInflows_sd) %>% matrix(nrow = ntimes, byrow = TRUE)
