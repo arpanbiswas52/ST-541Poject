@@ -64,12 +64,12 @@ obj_Func_eval <- function(X, samples, initial_cond){
   ntimes <- initial_cond$ntimes
   Outflows<- X %>% matrix(ncol = t, byrow = TRUE)
   #browser()
-  #mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-  #                                   Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-  #                                   efficieny=0.75, t, r, ntimes)
-  mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+  mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
                                      Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
                                      efficieny=0.75, t, r, ntimes)
+  #mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+  #                                   Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+  #                                   efficieny=0.75, t, r, ntimes)
   Total_Revenue_stat <- Total_Revenue_cal(mean_sd_simulations, Price, t, ntimes)
   
   #Calculating Robust objective for maximizing the objective function

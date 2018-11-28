@@ -30,7 +30,7 @@ Pricedata
 t <- 14 # number of daily timesteps for 14 days
 r <- 3 # number of reservoirs = 3 
 rel_index <- 0.9
-ntimes<- 100
+ntimes<- 500
 Current_Inflows <- c(81.45, 11.04, 131.27) 
 Current_Outflows <- c(55.72, 13.54, 127.03)
 Current_Storage <- c(2260, 47.8, 79.1)
@@ -65,9 +65,9 @@ lb <- rep(Outflows_lb, each= t)
 ub <- rep(Outflows_ub, each= t) 
 
 #Generating samples
-#samples <- get_samples(t, ntimes)
-samples_antithetic <- get_samples_antithetic(t,ntimes)
-samples <- samples_antithetic
+samples <- get_samples(t, ntimes)
+#samples_antithetic <- get_samples_antithetic(t,ntimes)
+#samples <- samples_antithetic
 
 ```
 
@@ -81,4 +81,8 @@ optim<- slsqp(x0, obj_Func_eval, gr = NULL, lower = lb, upper = ub, Constraints_
 (opt_Q <- optim$par %>% matrix(ncol = t, byrow = TRUE))
 (opt_R <- -optim$value)
 toc()
+plot(c(1:t), opt_Q[1,],type = "o", col="blue", pch="o", lty=1, ylim =c(0,300), xlab="day",ylab = "Outflows (kcfs)", main = "Optimal Outflows")
+lines(c(1:t), opt_Q[2,], type = "o", col="red", pch="*", lty=2)
+lines(c(1:t), opt_Q[3,], type = "o", col="black", pch="+", lty=3)
+legend(6,300,legend=c("GCL","LWG", "MCN"), col=c("blue","red","black"),pch=c("o","*","+"), lty=c(1,2,3))
 ```

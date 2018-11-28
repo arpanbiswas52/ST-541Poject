@@ -96,7 +96,7 @@ Constraints_validation <- function(X){
   Outflows<- X %>% matrix(ncol = t, byrow = TRUE)
   #browser()
   rel_index <- 0.9
-  ntimes<- 100
+  ntimes<- 500
   Current_Inflows <- c(81.45, 11.04, 131.27) 
   Current_Outflows <- c(55.72, 13.54, 127.03)
   Current_Storage <- c(2260, 47.8, 79.1)
@@ -115,9 +115,9 @@ Constraints_validation <- function(X){
   Fb_target <- 1281 
   
   #set.seed(1)
-  #samples <- get_samples(t, ntimes)
-  samples_antithetic <- get_samples_antithetic(t,ntimes)
-  samples <- samples_antithetic
+  samples <- get_samples(t, ntimes)
+  #samples_antithetic <- get_samples_antithetic(t,ntimes)
+  #samples <- samples_antithetic
   #Current_Storage <- initial_cond$Current_Storage
   #Current_Inflows <- initial_cond$Current_Inflows
   #Current_Outflows <- initial_cond$Current_Outflows
@@ -138,12 +138,12 @@ Constraints_validation <- function(X){
   #Fb_target <- initial_cond$Fb_target
   
   
-  #mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-  #                                   Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-  #                                   efficieny=0.75, t, r, ntimes)
-  mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-                                                Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-                                                efficieny=0.75, t, r, ntimes)
+  mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                     Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                     efficieny=0.75, t, r, ntimes)
+  #mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+  #                                              Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+  #                                              efficieny=0.75, t, r, ntimes)
   
   Storage_constraints_validation <- Storage_constraints(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t) 
   

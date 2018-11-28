@@ -10,7 +10,7 @@ library(debugr)
 #Setting initial conditions
 t <- 14 # number of daily timesteps for 14 days
 r <- 3 # number of reservoirs = 3 
-ntimes<- 1000
+ntimes<- 500
 Current_Inflows <- c(81.45, 11.04, 131.27) 
 Current_Outflows <- c(55.72, 13.54, 127.03)
 Current_Storage <- c(2260, 47.8, 79.1)
