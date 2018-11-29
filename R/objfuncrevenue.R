@@ -80,7 +80,7 @@ Total_Revenue_cal <- function(mean_sd_simulations, Price, t, ntimes){
 #' obj_Func_eval(X, samples, initial_cond)
 obj_Func_eval <- function(X, samples, initial_cond){
   
-  
+  browser()
   Price <- samples$Price_samples
   Current_Storage <- initial_cond$Current_Storage
   Current_Inflows <- initial_cond$Current_Inflows
