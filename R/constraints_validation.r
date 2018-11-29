@@ -1,4 +1,4 @@
-#```{r}
+
 #Validating Storage Constraints
 
 Storage_constraints <- function(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t){
@@ -15,13 +15,7 @@ Storage_constraints <- function(mean_sd_simulations, Storage_min, Storage_max, r
   Storage_constraints <- cbind(-MinStorage_val, -MaxStorage_val)
 } 
 
-#```
 
-#```{r}
-#Storage_constraints_validation <- Storage_constraints(mean_sd_simulations, Storage_min, Storage_max, rel_index =0.9, t = 14) 
-#```
-
-#```{r}
 #Validating Forebay Constraints
 
 Forebay_constraints <- function(mean_sd_simulations, Forebay_min, Forebay_max, rel_index, r, t){
@@ -38,13 +32,7 @@ Forebay_constraints <- function(mean_sd_simulations, Forebay_min, Forebay_max, r
   Forebay_constraints <- cbind(-MinForebay_val, -MaxForebay_val)
 } 
 
-#```
 
-#```{r}
-#Forebay_constraints_validation <- Forebay_constraints(mean_sd_simulations, Forebay_min, Forebay_max, rel_index =0.9, t = 14) 
-#```
-
-#```{r}
 #Validating Energy Constraints
 
   Energy_constraints <- function(mean_sd_simulations, Energy_min, Energy_max, rel_index, r, t){
@@ -61,12 +49,7 @@ Forebay_constraints <- function(mean_sd_simulations, Forebay_min, Forebay_max, r
   Energy_constraints <- cbind(-MinForebay_val, -MaxForebay_val)
 } 
 
-#```
 
-#```{r}
-#Energy_constraints_validation <- Energy_constraints(mean_sd_simulations, Energy_min, Energy_max, rel_index =0.9, t = 14) 
-#```
-#```{r}
 # Validating Forebay elevation at end of optimization period, t=14
 # This constraint is only for Grand Coulee reservoir
 
@@ -118,6 +101,8 @@ Constraints_validation <- function(X){
   samples <- get_samples(t, ntimes)
   #samples_antithetic <- get_samples_antithetic(t,ntimes)
   #samples <- samples_antithetic
+  
+  
   #Current_Storage <- initial_cond$Current_Storage
   #Current_Inflows <- initial_cond$Current_Inflows
   #Current_Outflows <- initial_cond$Current_Outflows
