@@ -1,0 +1,16 @@
+---
+title: 'An  approach to Robust Optimization of Large Scale Complex River
+  System'
+author: "Arpan Biswas"
+output:
+  pdf_document
+    
+---
+
+# Introduction 
+
+Renewable energy, such as hydroenergy, is one of the major sources for electricity generation for energy sectors. Over many decades, there has been continuous development of water resource management for the economic benefit of electricity industries. However, in real world, these energy sectors deal with different sources of uncertainties like Inflows, Market Prices and Market Demand of electricity which significantly impacts their operations and therefore in generating revenue. Therefore, the objective in this project is to generate a Robust Optimization framework for maximizing the Net Revenue and thereby provide a robust solution of optimal operation control. However, RO model is generally too expensive due to it's high simulation and function evaluation costs during quantification and propagation of uncertainity through the large scale complex system. This can make the model inefficient since the operators need to run the model at regular interval of time (hourly). Therfore, in this project, another research objective is to investigate on increasing the efficiency of the model in terms of reducing computational cost and/or providing better optimal solutions.
+
+# Model Description
+
+In this section, we have presented the Robust optimization model and have discussed the efforts done to build the model. Figure 1. provides the high level framework of our model.In this problem, we have selected our decision variables as Outflows from the reservoirs and objective function is maximizing Revenue. The problem consists constraint on Storage, Forebay elevation, Power output and Forebay elevation at end of period. From figure 1, the model starts with inputing Inflows, Price and decision variables as Outflows.After that, a large scale simulations of Storage, Forebay, Tailwater, Head, Energy generation and Revenue is executed and the respective means and standard devaitions is calculated. After that, the model calculates Robust objective function and validates all the Probabilistic constraints. The model then checks if the convergence criteria have been achieved and if all the constraints have been satisfied.    
