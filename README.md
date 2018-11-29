@@ -1,7 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# An approach to the efficient constraint validation and reduction of Simulation Cost of Large Scale Complex River System.
+# An approach to Robust Optimization of Large Scale Complex River System
 
 Author: “Arpan Biswas”
 
@@ -30,4 +28,4 @@ through complex River system. Efficiency is measured here in terms of
 reducing the simulation time along with better estimation of the
 parameters (mean, variance) of quantities of interest for constraint
 validations like Storage, Forebay Elevation, Turbine Flow, Power Output,
-Forebay elevation End of Period constraints.
+Forebay elevation End of Period constraint.
