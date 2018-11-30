@@ -1,0 +1,30 @@
+```{r setup, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = "hide")
+library(tidyverse)
+library(here)
+library(debugr)
+library(furrr)
+library(tictoc)
+```
+
+
+```{r}
+obj_Func_eval <- function(mean_sd_simulations, samples, t, ntimes){
+  Price <- samples$Price_samples
+  Total_Revenue_stat <- Total_Revenue_cal(mean_sd_simulations, Price, t, ntimes)
+  
+  #Calculating Robust objective for maximizing the objective function
+  
+  Risk_coeff <- 10^6
+  
+  Robust_obj <- Total_Revenue_stat[1] - ((Total_Revenue_stat[2]^2)/(2*Risk_coeff))
+  
+  obj_Func_eval <- -Robust_obj
+}
+  
+  
+```
+```{r}
+#tic()
+obj_Func_val <- obj_Func_eval(mean_sd_simulations, samples, t= 14, ntimes)
+#toc()

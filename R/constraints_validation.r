@@ -1,5 +1,45 @@
 
-#Validating Storage Constraints
+#' Validating Storage Constraints
+#'
+#' Validates Probabilistic Storage Constraints with Reliability \code{rel_index} = 0.9
+#' 
+#' Validates Probabilistic Storage Constraints with Reliability \code{rel_index} = 0.9
+#'
+#' @param mean_sd_simulations A large list of simulations along with the mean and standard deviation
+#' for Storage, Forebay, Energy etc. For example, in the simulation matrix of Energy (Energy_realizations) inside the list, each rows
+#' represent a single realization, \code{2*ntimes+1} and each columns represent the time steps,\code{t} in days.
+#' The first \code{ntimes} rows are the simulations for GrandCoulee, next \code{ntimes} rows are the simulations for Lower Granite
+#' and the last row of the matrix is the deterministic Energy generation data for McNaire. McNaire Inflows doesnot have any uncertainity
+#' since it is the total outflows released from GCL and LWG which are deterministic. In future, we can introduce other source
+#' of uncertainity in the inflows of McNaire.  
+#' @param Storage_min A vector of length 3 with minimum storage constraints of Grand Coulee, Lower Granite and McNaire
+#' for all \code{t} days. This is provided in the model as initial condition of the optimization.
+#' @param Storage_max A vector of length 3 with maximum storage constraints of Grand Coulee, Lower Granite and McNaire
+#' for all \code{t} days. This is provided in the model as initial condition of the optimization.
+#' @param rel_index Reliability index which is set as 0.9
+#' @param r An integer indicating the number of reservoirs. In this case study, \code{r}=3
+#' @param t An integer indicating the number of timesteps. If we consider daily timestep for 14 day optimization
+#' period, \code{t} = 14.
+#'
+#' @return A matrix of constraints validated values where positive number is the satisfaction of the constraints by
+#' @export
+#'
+#' @examples
+#' samples <- samples
+#' Storage_initial <- Current_Storage
+#' Inflow_initial <- Current_Inflows
+#' Outflow_initial <- Current_Outflows
+#' Forebay_initial <- Current_Forebay
+#' Tailwater_initial <- Current_Tailwater
+#' Outflows <- Outflows_matrixform
+#' Fb_coeff <- Fb_coeff
+#' Tw_coeff <- Tw_coeff
+#' delta_t <- 1
+#' efficieny <- 0.75
+#' t <- 14
+#' r<- 3
+#' n_samples <-500
+#' mean_sd_sim(samples, Storage_initial, Inflow_initial, Outflow_initial,  Forebay_initial, Tailwater_initial, Outflows, Fb_coeff, Tw_coeff, delta_t, efficieny, t, r, n_samples)
 
 Storage_constraints <- function(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t){
   V_min <- rep(Storage_min, t) %>% matrix(ncol = t) 

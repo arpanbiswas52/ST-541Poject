@@ -10,7 +10,11 @@
 #'
 #' @param mean_sd_simulations A large list of simulations along with the mean and standard deviation
 #' for Storage, Forebay, Energy etc. For example, in the simulation matrix of Energy (Energy_realizations) inside the list, each rows
-#' represent a single realization, \code{ntimes} and each columns represent the time steps,\code{t} in days  
+#' represent a single realization, \code{2*ntimes+1} and each columns represent the time steps,\code{t} in days.
+#' The first \code{ntimes} rows are the simulations for GrandCoulee, next \code{ntimes} rows are the simulations for Lower Granite
+#' and the last row of the matrix is the deterministic Energy generation data for McNaire. McNaire Inflows doesnot have any uncertainity
+#' since it is the total outflows released from GCL and LWG which are deterministic. In future, we can introduce other source
+#' of uncertainity in the inflows of McNaire.
 #' @param Price A large matrix of \code{ntimes^2} simulations of Price for \code{t} = 14 days. Each rows
 #' represent a single realization and each columns represent the time steps,\code{t} in days   
 #' @param t An integer indicating the number of timesteps. If we consider daily timestep for 14 day optimization
