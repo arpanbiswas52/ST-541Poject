@@ -71,15 +71,16 @@ ForebayEndofPeriod_constraints <- function(mean_sd_simulations, Fb_target, rel_i
 #This function calls all the constraints validation function from R and return a list of data where if value >= 0 means the constraint is satisfied and if value <0 means constraint is violated
 
 Constraints_validation <- function(X){
-  #browser()
-  
+  GCLInflowsdata <- read_csv("data/GCLInflowsdata.csv")
+  LWGInflowsdata <- read_csv("data/LWGInflowsdata.csv")
+  Pricedata <- read_csv("data/Pricedata.csv")
   #Setting initial conditions
   t <- 14 # number of daily timesteps for 14 days
   r <- 3 # number of reservoirs = 3 
   Outflows<- X %>% matrix(ncol = t, byrow = TRUE)
   #browser()
   rel_index <- 0.9
-  ntimes<- 500
+  ntimes<- 100
   Current_Inflows <- c(81.45, 11.04, 131.27) 
   Current_Outflows <- c(55.72, 13.54, 127.03)
   Current_Storage <- c(2260, 47.8, 79.1)
@@ -98,8 +99,8 @@ Constraints_validation <- function(X){
   Fb_target <- 1281 
   
   #set.seed(1)
-  samples <- get_samples(t, ntimes)
-  #samples_antithetic <- get_samples_antithetic(t,ntimes)
+  samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+  #samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
   #samples <- samples_antithetic
   
   

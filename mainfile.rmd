@@ -8,29 +8,30 @@ library(nloptr)
 library(debugr)
 library(furrr)
 library(tictoc)
+library(readr)
 ```
 
 
-```{r}
+```{r, warning=FALSE, message=False}
 
 #Loading the input data of Inflows to Grand Coulee, Lower Granite Reservoirs and Price data.
 # The input data has uncertainities.
 #The input data are the realizations of Inflows, Price for 14 days.
 
-library(readr)
+
 GCLInflowsdata <- read_csv("data/GCLInflowsdata.csv")
 LWGInflowsdata <- read_csv("data/LWGInflowsdata.csv")
 Pricedata <- read_csv("data/Pricedata.csv")
-GCLInflowsdata
-LWGInflowsdata
-Pricedata
+#GCLInflowsdata
+#LWGInflowsdata
+#Pricedata
 ```
 ```{r}
 #Setting initial conditions
 t <- 14 # number of daily timesteps for 14 days
 r <- 3 # number of reservoirs = 3 
 rel_index <- 0.9
-ntimes<- 500
+ntimes<-100
 Current_Inflows <- c(81.45, 11.04, 131.27) 
 Current_Outflows <- c(55.72, 13.54, 127.03)
 Current_Storage <- c(2260, 47.8, 79.1)
@@ -65,9 +66,9 @@ lb <- rep(Outflows_lb, each= t)
 ub <- rep(Outflows_ub, each= t) 
 
 #Generating samples
-samples <- get_samples(t, ntimes)
-#samples_antithetic <- get_samples_antithetic(t,ntimes)
-#samples <- samples_antithetic
+#samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+samples <- samples_antithetic
 
 ```
 
