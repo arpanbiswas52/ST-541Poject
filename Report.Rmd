@@ -11,7 +11,7 @@ Renewable energy, such as hydroenergy, is one of the major sources for electrici
 
 # Model Description
 
-In this section, we have presented the Robust optimization model and have discussed the efforts done to build the model. Figure 1 provides the high level framework of our model. In this problem, we have selected our decision variables as Outflows from the reservoirs and objective function is maximizing Expected Revenue. The problem includes constraints on Storage, Forebay elevation, Power output and Forebay elevation at end of period. From figure 1, the model starts with inputting Inflows, Price and decision variables as Outflows. After that, large scale simulations of Storage, Forebay, Tailwater, Head, Energy generation and Revenue is executed and the respective means and standard deviations is calculated. After that, the model calculates Robust objective function and validates all the Probabilistic constraints. The model then checks if the convergence criteria and no constraints violation have been achieved. If satisfied, the model provides the optimal solution as Outflows and Expected Revenue. If not, the model moves to next iteration and start the simulations again with different sets of decision variables. 
+In this section, we have presented the Robust optimization model and have discussed the efforts done to build the model. In this problem, we have selected our decision variables as Outflows from the reservoirs and objective function is maximizing Expected Revenue. The problem includes constraints on Storage, Forebay elevation, Power output and Forebay elevation at end of period. The model starts with inputting Inflows, Price and decision variables as Outflows. After that, large scale simulations of Storage, Forebay, Tailwater, Head, Energy generation and Revenue is executed and the respective means and standard deviations is calculated. After that, the model calculates Robust objective function and validates all the Probabilistic constraints. The model then checks if the convergence criteria and no constraints violation have been achieved. If satisfied, the model provides the optimal solution as Outflows and Expected Revenue. If not, the model moves to next iteration and start the simulations again with different sets of decision variables. 
 
 # Methodology
 
@@ -23,30 +23,57 @@ In this section, we have mentioned about the analysis done on the RO model to in
 
 # Results
 
-In this section, we have provided the description of the case study with all the results from the model and model comparisons. In this case study, we have considered 3 reservoirs (Grand Coulee, Lower Granite and McNaire) from Lower Columbia River System where there are two inflow channels: Inflows to Grand Coulee (GCL) and inflows to Lower Granite (LWG). The inflows to McNaire (MCN) are the total outflows from Grand Coulee and Lower Granite reservoirs. The optimization period has been considered as 14 days with daily timesteps. In this case study, we have 42 decision variables and 250 constraints validation. Historical inflows data has been considered of GCL and LWG to predict the inflows for two weeks period(Figure 2, 3). From the means and standard deviations of these historical data, 500 samples (considering normal distribution) of each inflows at each day have been taken for MC approach. We have generated few predicted data of prices based on the range provided by BPA (Bonneville Power Administration). From the mean and the standard deviation of Price data (Figure 4), we need to generate $500*500 = 62500$ samples (considering Normal distribution). This is because in order to simulate the revenue each day, total energy generated each day from two sources of inflows has been simulated with all possible realizations $500*500$. Figure 4 shows the optimal outflows from the three reservoirs using MC approach. We can observe that the optimal decision is to release more water (higher outflow values) to generate more energy and on the day with higher predicted mean price and lower standard deviations like on day 3, 10 and 12, thereby generating more expected revenue. Thus we get a robust decision. The estimated total revenue during 14 days optimization period is 88 million dollars approx.  Next, we have applied antithetic variable approach with 100 samples of each inflows at each day, therefore generated $100*100 = 10000$ samples for price. Figure 5 shows the optimal outflows from the three reservoirs using Antithetic variable approach. The optimal decision still provides higher outflows (day 3, 10 and 12) among the other days due to relatively higher mean prices with lower standard deviations, thereby ensuring the robustness of the solution is still intact. To check the performance of the Antithetic variable approach in our problem in reducing the variance, we have compared the variances of storage of GCL and LWH with that in MC approach. Figure 6 shows the reduction of variances using Antithetic approach which is quite significant. Due to the reduction of variances in the estimation of quantities of interest in future days, we get a better estimated revenue of 88.9 million dollars at the optimal solution from the model. There, we observe an improvement in revenue of 0.9 million dollars (1%). Also, with lesser number of simulations, each iteration took $4.64s$ approx. with total runtime (106 iterations) of $8 mins$ approx. whereas each iteration for MC approach took $128s$ approx. with total runtime (9 iterations) of $19 mins$ approx. 
+In this section, we have provided the description of the case study with all the results from the model and model comparisons. In this case study, we have considered 3 reservoirs (Grand Coulee, Lower Granite and McNaire) from Lower Columbia River System where there are two inflow channels: Inflows to Grand Coulee (GCL) and inflows to Lower Granite (LWG). The inflows to McNaire (MCN) are the total outflows from Grand Coulee and Lower Granite reservoirs. The optimization period has been considered as 14 days with daily timesteps. In this case study, we have 42 decision variables and 250 constraints validation. Historical inflows data has been considered of GCL and LWG to predict the inflows for two weeks period(Figure 1, 2 respectively). From the means and standard deviations of these historical data, 500 samples (considering normal distribution) of each inflows at each day have been taken for MC approach. We have generated few predicted data of prices based on the range provided by BPA (Bonneville Power Administration). From the mean and the standard deviation of Price data (Figure 3), we need to generate $500*500 = 62500$ samples (considering Normal distribution). This is because in order to simulate the revenue each day, total energy generated each day from two sources of inflows has been simulated with all possible realizations $500*500$. Figure 4 shows the optimal outflows from the three reservoirs using MC approach. We can observe that the optimal decision is to release more water (higher outflow values) to generate more energy and on the day with higher predicted mean price and lower standard deviations like on day 3, 10 and 12, thereby generating more expected revenue. Thus we get a robust decision. The estimated total revenue during 14 days optimization period is 88 million dollars approx.  Next, we have applied antithetic variable approach with 100 samples of each inflows at each day, therefore generated $100*100 = 10000$ samples for price. To check the performance of the Antithetic variable approach in our problem in reducing the variance, we have compared the variances of storage of GCL and LWH with that in MC approach. Figure 5 shows the reduction of variances using Antithetic approach which is quite significant. Due to the reduction of variances in the estimation of quantities of interest in future days, we get a better estimated revenue of 88.9 million dollars at the optimal solution from the model. There, we observe an improvement in revenue of 0.9 million dollars (1%). Also, with lesser number of simulations, each iteration took $4.64s$ approx. with total runtime (106 iterations) of $8 mins$ approx. whereas each iteration for MC approach took $128s$ approx. with total runtime (9 iterations) of $19 mins$ approx. Figure 6 shows the optimal outflows from the three reservoirs using Antithetic variable approach. The optimal decision still provides higher outflows (day 3, 10 and 12) among the other days due to relatively higher mean prices with lower standard deviations, thereby ensuring the robustness of the solution is still intact. 
 
 
 ```{r,warning=FALSE, message= FALSE, echo=FALSE}
 ##![](results/estimated\ price.png)
 library(readr)
-par(mfrow=c(2,2))
-opt_Q_MC <- readRDS("Results/optoutflows_MC.rds")
 t<-14
+par(mfrow=c(2,2))
+
+GCLInflowsdata <- read_csv("data/GCLInflowsdata.csv")
+GCLInflows<- GCLInflowsdata[-c(1)]
+plot(c(1:t), t(GCLInflows[ ,1]),type = "o", col="blue", pch="o", lty=1, ylim =c(60,90), xlab="day",ylab = "Inflows (kcfs)", main = "Fig 1. Inflows of GCL", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
+for (i in 2:(length(GCLInflows))){
+lines(c(1:t), t(GCLInflows[,i]), type = "o", col="blue", pch="o", lty=1)
+}
+
+LWGInflowsdata <- read_csv("data/LWGInflowsdata.csv")
+LWGInflows<- LWGInflowsdata[-c(1)]
+plot(c(1:t), t(LWGInflows[ ,1]),type = "o", col="red", pch="*", lty=1, ylim =c(10,30), xlab="day",ylab = "Inflows (kcfs)", main = "Fig 2. Inflows of LWG", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
+for (i in 2:(length(LWGInflows))){
+lines(c(1:t), t(LWGInflows[,i]), type = "o", col="red", pch="*", lty=1)
+}
+
+par(mfrow=c(2,2))
+Pricedata <- read_csv("data/Pricedata.csv")
+Pricedata_Mean <- colMeans((Pricedata[,2:15]))
+Pricedata_Mean2 <- colMeans((Pricedata[,2:15])^2)
+Pricedata_sd <- sqrt(Pricedata_Mean2 - Pricedata_Mean^2)
+plot(c(1:t), Pricedata_Mean,type = "o", col="blue", pch="o", lty=1, ylim =c(0,100), xlab="day",ylab = "Price/ MWh", main = "Fig 3. Predicted Price", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
+lines(c(1:t), (Pricedata_Mean+ 1*Pricedata_sd), type = "o", col="red", pch="*", lty=2)
+lines(c(1:t), (Pricedata_Mean- 1*Pricedata_sd), type = "o", col="red", pch="*", lty=2)
+legend(1,100,legend=c("Means","+-1 std devs"), col=c("blue","red"),pch=c("o","*"), lty=c(1,2),cex = 0.5)
+
+opt_Q_MC <- readRDS("Results/optoutflows_MC.rds")
 plot(c(1:t), opt_Q_MC[1,],type = "o", col="blue", pch="o", lty=1, ylim =c(0,500), xlab="day",ylab = "Outflows (kcfs)", main = "Fig 4.Optimal Outflows (MC approach)", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
 lines(c(1:t), opt_Q_MC[2,], type = "o", col="red", pch="*", lty=2)
 lines(c(1:t), opt_Q_MC[3,], type = "o", col="black", pch="+", lty=3)
 legend(6,500,legend=c("GCL","LWG", "MCN"), col=c("blue","red","black"),pch=c("o","*","+"), lty=c(1,2,3),cex = 0.45)
 
+var_red <- readRDS("Results/variance_reduction_data.rds")
+plot(c(1:t), var_red[1,],type = "o", col="blue", pch="o", lty=1, ylim =c(0,500), xlab="day",ylab = "Variance reduction (kcfs-day)", main = "Fig 5. Variance reduction by Antithetic approach", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
+lines(c(1:t), var_red[2,], type = "o", col="red", pch="*", lty=2)
+legend(1,500,legend=c("GCL-Storage","LWG-Storage"), col=c("blue","red"),pch=c("o","*"), lty=c(1,2),cex = 0.75)
+
 opt_Q_AV <- readRDS("Results/optoutflows_antithetic.rds")
-plot(c(1:t), opt_Q_AV[1,],type = "o", col="blue", pch="o", lty=1, ylim =c(0,500), xlab="day",ylab = "Outflows (kcfs)", main = "Fig 5.Optimal Outflows (Antithetic Variable approach)", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
+plot(c(1:t), opt_Q_AV[1,],type = "o", col="blue", pch="o", lty=1, ylim =c(0,500), xlab="day",ylab = "Outflows (kcfs)", main = "Fig 6.Optimal Outflows (Antithetic Variable approach)", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
 lines(c(1:t), opt_Q_AV[2,], type = "o", col="red", pch="*", lty=2)
 lines(c(1:t), opt_Q_AV[3,], type = "o", col="black", pch="+", lty=3)
 legend(6,500,legend=c("GCL","LWG", "MCN"), col=c("blue","red","black"),pch=c("o","*","+"), lty=c(1,2,3),cex = 0.45)
 
-var_red <- readRDS("Results/variance_reduction_data.rds")
-plot(c(1:t), var_red[1,],type = "o", col="blue", pch="o", lty=1, ylim =c(0,500), xlab="day",ylab = "Variance reduction (kcfs-day)", main = "Fig 6. Variance reduction by Antithetic approach", prob=TRUE, cex.main = 0.75,cex.lab = 0.75)
-lines(c(1:t), var_red[2,], type = "o", col="red", pch="*", lty=2)
-legend(1,500,legend=c("GCL-Storage","LWG-Storage"), col=c("blue","red"),pch=c("o","*"), lty=c(1,2),cex = 0.75)
+
 ```
 
 # Conclusion
