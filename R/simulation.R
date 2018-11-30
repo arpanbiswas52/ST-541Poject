@@ -125,12 +125,12 @@ mean_sd_sim_antithetic <- function(samples, Storage_initial, Inflow_initial, Out
   GCLInflowsdata_samples<- samples_antithetic$GCLInflowsdata_samples
   LWGInflowsdata_samples<- samples_antithetic$LWGInflowsdata_samples
   
-  Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Current_Storage, Current_Inflows, Current_Outflows, Outflows, delta_t, t, n_samples)
+  Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Storage_initial, Inflow_initial, Outflow_initial, Outflows, delta_t, t, n_samples)
   
   #browser()
   Forebay_largerealizations <- Forebay_realizations(Storage_largerealizations, Fb_coeff, t, n_samples)
   
-  Tailwater_largerealizations <- Tailwater_realizations(Forebay_largerealizations, Current_Outflows, Current_Forebay, Current_Tailwater, Tw_coeff, Outflows, t, n_samples)
+  Tailwater_largerealizations <- Tailwater_realizations(Forebay_largerealizations, Outflow_initial,  Forebay_initial, Tailwater_initial, Tw_coeff, Outflows, t, n_samples)
   
   Head_largerealizations <- Head_realizations(Forebay_largerealizations, Tailwater_largerealizations)
   
@@ -210,22 +210,22 @@ mean_sd_sim_antithetic <- function(samples, Storage_initial, Inflow_initial, Out
 }
 
 #Quantifying mean and standard deviation for the QoI
-mean_sd_sim <- function(samples, Storage_initial, Inflow_initial, Outflow_initial,  Forebay_initial, Tailwater_initial, Outflows, Fb_coeff, Tw_coeff, delta_t, efficieny, t, r, ntimes){
+mean_sd_sim <- function(samples, Storage_initial, Inflow_initial, Outflow_initial,  Forebay_initial, Tailwater_initial, Outflows, Fb_coeff, Tw_coeff, delta_t, efficieny, t, r, n_samples){
   #MC approach
   GCLInflowsdata_samples<- samples$GCLInflowsdata_samples
   LWGInflowsdata_samples<- samples$LWGInflowsdata_samples
   #browser()
-  Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Current_Storage, Current_Inflows, Current_Outflows, Outflows, delta_t, t, ntimes)
+  Storage_largerealizations <- Storage_realizations(GCLInflowsdata_samples, LWGInflowsdata_samples, Storage_initial, Inflow_initial, Outflow_initial, Outflows, delta_t, t, n_samples)
   
   #browser()
-  Forebay_largerealizations <- Forebay_realizations(Storage_largerealizations, Fb_coeff, t, ntimes)
+  Forebay_largerealizations <- Forebay_realizations(Storage_largerealizations, Fb_coeff, t, n_samples)
   
-  Tailwater_largerealizations <- Tailwater_realizations(Forebay_largerealizations, Current_Outflows, Current_Forebay, Current_Tailwater, Tw_coeff, Outflows, t, ntimes)
+  Tailwater_largerealizations <- Tailwater_realizations(Forebay_largerealizations, Outflow_initial,  Forebay_initial, Tailwater_initial, Tw_coeff, Outflows, t, n_samples)
   
   Head_largerealizations <- Head_realizations(Forebay_largerealizations, Tailwater_largerealizations)
   
-  Energy_largerealizations <- Energy_realizations(Head_largerealizations, Outflows, efficieny, ntimes)
-  n <- ntimes
+  Energy_largerealizations <- Energy_realizations(Head_largerealizations, Outflows, efficieny, n_samples)
+  n <- n_samples
   
   Storage_mean <- matrix(0L, nrow =r, ncol = t)
   Storage_mean2 <- matrix(0L, nrow =r, ncol = t)

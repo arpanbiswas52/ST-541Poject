@@ -26,6 +26,7 @@ Tw_coeff <- matrix(c(447.97, 122.81, 18.60, 0.0910, 0.0210, 0.0202, 0.5286, 0.80
 ```{r}
 devtools::load_all()
 devtools::load_data()
+#usethis::use_data()
 ```
 
 ```{r}
