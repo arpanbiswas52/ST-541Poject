@@ -1,12 +1,12 @@
 Package: project
-Title: What the Package Does (One Line, Title Case)
+Title: Robust Optimization of 3 reservoir system
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Arpan",
+           family = "Biswas",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
+           email = "biswasar@oregonstate.edu")
+Description: Robust Optimization of 3 reservoir system
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
