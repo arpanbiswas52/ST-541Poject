@@ -82,6 +82,7 @@ Total_Revenue_cal <- function(mean_sd_simulations, Price, t, ntimes){
 #' samples <- samples
 #' initial_cond <- initial_cond
 #' obj_Func_eval(X, samples, initial_cond)
+
 obj_Func_eval <- function(X, samples, initial_cond){
   
   #browser()
@@ -96,14 +97,23 @@ obj_Func_eval <- function(X, samples, initial_cond){
   t<- initial_cond$t
   r<- initial_cond$r
   ntimes <- initial_cond$ntimes
+  methodSampling <- initial_cond$methodSampling
   Outflows<- X %>% matrix(ncol = t, byrow = TRUE)
+  browser()
+  if (methodSampling == 1){
+    mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                                  Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                                  efficieny=0.75, t, r, ntimes)
+  }else if (methodSampling == 2) {
+    mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                       Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                       efficieny=0.75, t, r, ntimes)
+  } else {
+    print("Invalid Option: Choose methodSampling between 1 or 2")
+  }
   #browser()
-  mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-                                     Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-                                     efficieny=0.75, t, r, ntimes)
-  #mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-  #                                   Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-  #                                   efficieny=0.75, t, r, ntimes)
+  
+  
   Total_Revenue_stat <- Total_Revenue_cal(mean_sd_simulations, Price, t, ntimes)
   
   #Calculating Robust objective for maximizing the objective function

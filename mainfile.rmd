@@ -3,10 +3,10 @@
 ```{r setup, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE, results = "hide")
 library(tidyverse)
-library(here)
+#library(here)
 library(nloptr)
-library(debugr)
-library(furrr)
+#library(debugr)
+#library(furrr)
 library(tictoc)
 library(readr)
 ```
@@ -26,12 +26,18 @@ Pricedata <- read_csv("data/Pricedata.csv")
 #LWGInflowsdata
 #Pricedata
 ```
+
+```{r}
+#loading all functions like objective functions, functions for simulations, functions for constraint validations and data
+devtools::load_all()
+#devtools::load_data()
+```
+
 ```{r}
 #Setting initial conditions
 t <- 14 # number of daily timesteps for 14 days
 r <- 3 # number of reservoirs = 3 
 rel_index <- 0.9
-ntimes<-500
 Current_Inflows <- c(81.45, 11.04, 131.27) 
 Current_Outflows <- c(55.72, 13.54, 127.03)
 Current_Storage <- c(2260, 47.8, 79.1)
@@ -47,41 +53,44 @@ Forebay_min <- c(1208, 733, 334)
 Forebay_max <- c(1295, 738, 342)
 Energy_min <- c(0, 0, 250)
 Energy_max <- c(6735, 930, 1120)
-Fb_target <- 1281 
+Fb_target <- 1281
+methodSampling <-1 # Change the value here between 1 and 2 to apply Antithetic or MC approach respectively
 
-initial_cond <- list("Current_Inflows"=Current_Inflows, "Current_Outflows"=Current_Outflows,"Current_Storage" =Current_Storage,"Current_Forebay" = Current_Forebay, "Current_Tailwater"=Current_Tailwater, "Outflows_lb"=Outflows_lb, "Outflows_ub"=Outflows_ub, "Fb_coeff" =Fb_coeff, "Tw_coeff"=Tw_coeff, "Storage_min"=Storage_min, "Storage_max"=Storage_max,"Forebay_min"=Forebay_min,"Forebay_max"=Forebay_max, "Energy_min" =Energy_min, "Energy_max"=Energy_max,"Fb_target"=Fb_target, "t"=t, "r"=r, "rel_index"=rel_index, "ntimes" = ntimes)
-
-```
-
-```{r}
-#loading all functions like objective functions, functions for simulations, functions for constraint validations and data
-devtools::load_all()
-devtools::load_data()
-```
-
-```{r}
 #Setting starting point, upper bound and lower bound
 x0<- rep(Current_Outflows, each= t) 
 lb <- rep(Outflows_lb, each= t) 
 ub <- rep(Outflows_ub, each= t) 
 
 #Generating samples
-samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
-#samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
-#samples <- samples_antithetic
+if (methodSampling == 1){
+  ntimes<-100 #number of samples
+  samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+samples <- samples_antithetic
+}else if (methodSampling == 2) {
+  ntimes<-500 #number of samples
+  samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+} else {
+  ntimes <- 0
+    print("Invalid Option: Choose methodSampling between 1 or 2")
+  }
 
+
+# Creating a list of all initial conditions
+initial_cond <- list("Current_Inflows"=Current_Inflows, "Current_Outflows"=Current_Outflows,"Current_Storage" =Current_Storage,"Current_Forebay" = Current_Forebay, "Current_Tailwater"=Current_Tailwater, "Outflows_lb"=Outflows_lb, "Outflows_ub"=Outflows_ub, "Fb_coeff" =Fb_coeff, "Tw_coeff"=Tw_coeff, "Storage_min"=Storage_min, "Storage_max"=Storage_max,"Forebay_min"=Forebay_min,"Forebay_max"=Forebay_max, "Energy_min" =Energy_min, "Energy_max"=Energy_max,"Fb_target"=Fb_target, "t"=t, "r"=r, "rel_index"=rel_index, "ntimes" = ntimes, "methodSampling" = methodSampling)
 ```
 
 ```{r}
-plan(sequential)
+#Run optimization and tracking time
+#plan(sequential)
 tic()
-#Run optimization
 optim<- slsqp(x0, obj_Func_eval, gr = NULL, lower = lb, upper = ub, Constraints_validation,
   hinjac = NULL, heq = NULL, heqjac = NULL, nl.info = FALSE,
   control = list(xtol_rel = 1e-10),samples,initial_cond)
 (opt_Q <- optim$par %>% matrix(ncol = t, byrow = TRUE))
 (opt_R <- -optim$value)
 toc()
+
+#Plotting the optimal outflows of 3 reservoirs
 plot(c(1:t), opt_Q[1,],type = "o", col="blue", pch="o", lty=1, ylim =c(0,300), xlab="day",ylab = "Outflows (kcfs)", main = "Optimal Outflows")
 lines(c(1:t), opt_Q[2,], type = "o", col="red", pch="*", lty=2)
 lines(c(1:t), opt_Q[3,], type = "o", col="black", pch="+", lty=3)

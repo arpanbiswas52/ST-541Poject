@@ -69,7 +69,8 @@ ForebayEndofPeriod_constraints <- function(mean_sd_simulations, Fb_target, rel_i
 } 
 
 #This function calls all the constraints validation function from R and return a list of data where if value >= 0 means the constraint is satisfied and if value <0 means constraint is violated
-
+# slsqp() do not allow any additional arguments to the constraint functions, therefore I have to rewrite all the initial
+# conditions, inflow data etc. 
 Constraints_validation <- function(X){
   load("/cloud/project/data/GCLInflowsdata.rda")
   load("/cloud/project/data/LWGInflowsdata.rda")
@@ -80,7 +81,6 @@ Constraints_validation <- function(X){
   Outflows<- X %>% matrix(ncol = t, byrow = TRUE)
   #browser()
   rel_index <- 0.9
-  ntimes<- 100
   Current_Inflows <- c(81.45, 11.04, 131.27) 
   Current_Outflows <- c(55.72, 13.54, 127.03)
   Current_Storage <- c(2260, 47.8, 79.1)
@@ -97,11 +97,26 @@ Constraints_validation <- function(X){
   Energy_min <- c(0, 0, 250)
   Energy_max <- c(6735, 930, 1120)
   Fb_target <- 1281 
-  
-  
-  samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
-  #samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
-  #samples <- samples_antithetic
+  methodSampling <- 1 # Change the value here between 1 and 2 to apply Antithetic or MC approach respectively
+  browser()
+  if (methodSampling == 1){
+    ntimes<-100 #number of samples
+    samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+    samples <- samples_antithetic
+    mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                                  Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                                  efficieny=0.75, t, r, ntimes)
+    
+  }else if (methodSampling == 2) {
+    ntimes<-500 #number of samples
+    samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+    mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                       Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                       efficieny=0.75, t, r, ntimes)
+  } else {
+    ntimes <- 0
+    print("Invalid Option: Choose methodSampling between 1 or 2")
+  }
   
   
   #Current_Storage <- initial_cond$Current_Storage
@@ -124,12 +139,7 @@ Constraints_validation <- function(X){
   #Fb_target <- initial_cond$Fb_target
   
   
-  mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-                                     Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-                                     efficieny=0.75, t, r, ntimes)
-  #mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-  #                                              Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-  #                                              efficieny=0.75, t, r, ntimes)
+  
   
   Storage_constraints_validation <- Storage_constraints(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t) 
   
