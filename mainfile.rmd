@@ -54,7 +54,7 @@ Forebay_max <- c(1295, 738, 342)
 Energy_min <- c(0, 0, 250)
 Energy_max <- c(6735, 930, 1120)
 Fb_target <- 1281
-methodSampling <-2 # Change the value here between 1 and 2 to apply Antithetic or MC approach respectively
+methodSampling <-1 # Change the value here between 1 and 2 to apply Antithetic or MC approach respectively
 
 #Setting starting point, upper bound and lower bound
 x0<- rep(Current_Outflows, each= t) 

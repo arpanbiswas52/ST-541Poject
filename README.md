@@ -30,12 +30,12 @@ The report in pdf format can be found
 The slides from the presetation can be found
 [here](https://github.com/ST541-Fall2018/arpanbiswas52-project-ComplexRiverSystem/blob/Master/ProjectST541_Presentation.pdf).
 
-List of package required to run the project: `tidyverse`, `nloptr`,
-`tictoc` and `readr`
+List of package required to run the project: **tidyverse**, **nloptr**,
+**tictoc** and **readr**
 
 nloptr is a special package for optimization algorithm for nonlinear
 constraint problems. I have used Sequential Quadractic function
-(slsqp()) in the model as my problem is highly nonlinear. The function
+`slsqp()` in the model as my problem is highly nonlinear. The function
 will return a list containing the optimal decision, objective function
 at the optimal solution, number of iterations to converge, and
 convergence message. For more details, you can check at `?slsqp`.
@@ -124,8 +124,8 @@ data are loaded before running the optimization. Therfore, I wrote all
 the sections in a separate piece of chunks for better clarity.
 
 The model has been tested multiple times in 2 different systems at my
-home and 1 another system at my university lab and could reproduce the
-same results. Some efforts have been made to let the users run the model
+home and 1 another system at my university lab and could reproduce same
+results. Some efforts have been made to let the users run the model
 easily and with minimum manual steps.
 
 # Additional Comments
