@@ -87,24 +87,79 @@ reservoir at the end of optimization period and should be within a
 certain level of forebay at the start of next optimization
 period.`Constraints_validation()` calls all the above functions in this
 file and returns a single large matrix to the optimization program by
-concatenating all the validated results.slsqp() do not allow any
-additional arguments to this constraint functions
-`Constraints_validation()`, therefore I have to rewrite all the initial
-conditions, inflow data etc. again inside the functions as I cannot pass
-those arguments. Therfore, the code looks bit repeatative inside this
-function but it has been deliberately done due to the said reason.
+concatenating all the validated results.
 
-I have documented as taught in the lecture for all the functions in
-samples.R, simulation.R and objfuncrevenue.R, which comprised of 11
-functions. Since one of my prime focus is the computational efficiency
-of the model, I have always attempted to code the RO model efficiently
-by extensive applications of operations of large data in vectors and
-matrices, using `rowMeans()`, `colMeans()` etc., building several small
-functions to avoid redundant execution of codes multiple times, avoiding
-loops in large simulations. However, we had to use loops in calculating
-some quantities like Storage in each days (timesteps) since we need to
-know the value of storage at pervious day to calculate the storage at
-the current day. Therefore calculating the value of storage of 14 days
-together was not possible using operations in vectors. However, this
-will not significantly increase the runtime as we need to calculate for
-14 days only (14 iterations).
+As taught in the lecture, I have done formal documentation using roxygen
+for all the functions in **samples.R**, **simulation.R** and
+**objfuncrevenue.R**, comprised of 11 functions, to help anyone who want
+to understand the integral structure of the model. Since one of my prime
+focus is the computational efficiency of the model, I have always
+attempted to code the RO model efficiently by extensive applications of
+operations of large data in vectors and matrices, using `rowMeans()`,
+`colMeans()` etc., building several small functions to avoid redundant
+execution of codes multiple times, avoiding loops in large simulations.
+However, we had to use loops in calculating some quantities like Storage
+in each days (timesteps) since we need to know the value of storage at
+pervious day to calculate the storage at the current day. Therefore
+calculating the value of storage of 14 days together was not possible
+using operations in vectors. However, this will not significantly
+increase the runtime as we need to calculate for 14 days only (14
+iterations).
+
+# Manual to execute the model
+
+Below are the steps to run the model:
+
+1.  Open **mainfile.rmd**
+2.  Go to the last chunk of code (Chunk 5) and run all the above chunks.
+    This will load all the required functions, generate samples,
+    starting points of optimization, input data and initial conditions
+    required to start optimization.
+3.  Run Chunk 5. This will take some time to complete. Using Antithetic
+    approach and number of samples, \(ntimes = 100\), it take me around
+    8-10 mins.
+
+We can do Step 2 and 3 together but I would like to confirm if all the
+data are loaded before running the optimization. Therfore, I wrote all
+the sections in a separate piece of chunks for better clarity.
+
+The model has been tested multiple times in 2 different systems at my
+home and 1 another system at my university lab and could reproduce the
+same results. Some efforts have been made to let the users run the model
+easily and with minimum manual steps.
+
+# Additional Comments
+
+Currently, the setting of the model is using Antithetic Variable
+approach. If we need to change the setting to MC approach, do the
+following steps:
+
+1.  In **mainfile.rmd**, go to line 57 and change the value of the
+    variable `methodSampling` from \(1\) to \(2\). Donot give any other
+    value as this will pop an error message. Current setting of
+    `methodSampling` = 1.
+
+2.  Open to **constraints\_validation.r** inside R folder.
+
+3.  In **constraints\_validation.r**, go to function
+    `Constraints_validation()`. At line 100, change the value of the
+    variable `methodSampling` again from \(1\) to \(2\). Donot give any
+    other value as this will pop an error message. Current setting of
+    `methodSampling` = 1.
+
+We had to do Step 2 and 3 as I can not pass any additional arguments to
+constraint function of the optimization model due to such limitations in
+slsqp() (Sequential Quadratic Prog algorithm function). Also need to be
+careful that the value of the variable `methodSampling` must be equal in
+Step 1 and Step 3. Else, the optimization result will be incorrect.
+
+Additionally, there are some of my scratch works left in Objective,
+Constraints and Simulation folders which I was using to start the coding
+and testing of individual functions in small chunks. This is useful to
+do to eliminate most of the bugs before integrating the whole model
+since it is very hard to find bugs if any on a complex model. However,
+those functions may not be updated since I have modified my codes of the
+model after the integration.
+
+Lastly, I have learnt a lot in this class about R programming thanks to
+the outstanding guidance from Dr Wichkam and our class TA

@@ -99,7 +99,7 @@ obj_Func_eval <- function(X, samples, initial_cond){
   ntimes <- initial_cond$ntimes
   methodSampling <- initial_cond$methodSampling
   Outflows<- X %>% matrix(ncol = t, byrow = TRUE)
-  browser()
+  #browser()
   if (methodSampling == 1){
     mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
                                                   Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 

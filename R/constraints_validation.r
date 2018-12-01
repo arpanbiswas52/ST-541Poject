@@ -97,8 +97,8 @@ Constraints_validation <- function(X){
   Energy_min <- c(0, 0, 250)
   Energy_max <- c(6735, 930, 1120)
   Fb_target <- 1281 
-  methodSampling <- 1 # Change the value here between 1 and 2 to apply Antithetic or MC approach respectively
-  browser()
+  methodSampling <- 2 # Change the value here between 1 and 2 to apply Antithetic or MC approach respectively
+  #browser()
   if (methodSampling == 1){
     ntimes<-100 #number of samples
     samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
