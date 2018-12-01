@@ -71,9 +71,9 @@ ForebayEndofPeriod_constraints <- function(mean_sd_simulations, Fb_target, rel_i
 #This function calls all the constraints validation function from R and return a list of data where if value >= 0 means the constraint is satisfied and if value <0 means constraint is violated
 
 Constraints_validation <- function(X){
-  GCLInflowsdata <- read_csv("data/GCLInflowsdata.csv")
-  LWGInflowsdata <- read_csv("data/LWGInflowsdata.csv")
-  Pricedata <- read_csv("data/Pricedata.csv")
+  load("/cloud/project/data/GCLInflowsdata.rda")
+  load("/cloud/project/data/LWGInflowsdata.rda")
+  load("/cloud/project/data/Pricedata.rda")
   #Setting initial conditions
   t <- 14 # number of daily timesteps for 14 days
   r <- 3 # number of reservoirs = 3 
@@ -99,9 +99,9 @@ Constraints_validation <- function(X){
   Fb_target <- 1281 
   
   #set.seed(1)
-  samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
-  #samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
-  #samples <- samples_antithetic
+  #samples <- get_samples(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+  samples_antithetic <- get_samples_antithetic(t, ntimes,GCLInflowsdata,LWGInflowsdata,Pricedata)
+  samples <- samples_antithetic
   
   
   #Current_Storage <- initial_cond$Current_Storage
@@ -124,12 +124,12 @@ Constraints_validation <- function(X){
   #Fb_target <- initial_cond$Fb_target
   
   
-  mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-                                     Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-                                     efficieny=0.75, t, r, ntimes)
-  #mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
-  #                                              Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
-  #                                              efficieny=0.75, t, r, ntimes)
+  #mean_sd_simulations <- mean_sd_sim(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+  #                                   Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+  #                                   efficieny=0.75, t, r, ntimes)
+  mean_sd_simulations <- mean_sd_sim_antithetic(samples, Current_Storage, Current_Inflows, Current_Outflows, Current_Forebay, 
+                                                Current_Tailwater, Outflows, Fb_coeff, Tw_coeff, delta_t=1, 
+                                                efficieny=0.75, t, r, ntimes)
   
   Storage_constraints_validation <- Storage_constraints(mean_sd_simulations, Storage_min, Storage_max, rel_index, r, t) 
   
