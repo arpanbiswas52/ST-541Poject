@@ -78,11 +78,11 @@ created- `Storage_constraints()`, `Forebay_constraints()`,
 constraints of Storage of the reservoirs, `Forebay_constraints()`
 validates all the constraints of Froebay elevation of the reservoirs,
 `Energy_constraints()` validates the constraints on the energy
-generation by Turbines. `ForebayEndofPeriod_constraints()` is special
+generation by Turbines. `ForebayEndofPeriod_constraints()` are special
 constraints applied to Grand Coulee only to stabilize the forebay
 elevation at the end of period of optimization. Grand Coulle has the
-largest storage and take a longer time to fill. Therefore, we need to be
-sure the optimal result doesnot provide solution to empty the whole
+largest storage and takes a longer time to fill. Therefore, we need to
+be sure the optimal result doesnot provide solution to empty the whole
 reservoir at the end of optimization period and should be within a
 certain level of forebay at the start of next optimization
 period.`Constraints_validation()` calls all the above functions in this
@@ -98,12 +98,12 @@ attempted to code the RO model efficiently by extensive applications of
 operations of large data in vectors and matrices, using `rowMeans()`,
 `colMeans()` etc., building several small functions to avoid redundant
 execution of codes multiple times, avoiding loops in large simulations.
-However, we had to use loops in calculating some quantities like Storage
-in each days (timesteps) since we need to know the value of storage at
+However, I had to use loops in calculating some quantities like Storage
+in each days (timesteps) since I need to know the value of storage at
 pervious day to calculate the storage at the current day. Therefore
 calculating the value of storage of 14 days together was not possible
 using operations in vectors. However, this will not significantly
-increase the runtime as we need to calculate for 14 days only (14
+increase the runtime as I need to calculate for 14 days only (14
 iterations).
 
 # Manual to execute the model
